@@ -1,0 +1,10 @@
+// eslint-disable-next-line react/prop-types
+const FormTitle = ({ children }) => {
+  return (
+    <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
+      {children}
+    </h2>
+  );
+}
+
+export default FormTitle

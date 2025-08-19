@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="icon-home" viewBox="0 0 24 24">
+    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+  </symbol>
+
+  <symbol id="icon-user" viewBox="0 0 24 24">
+    <path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/>
+  </symbol>
+
+  <symbol id="icon-house" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/>
+    <path d="M9 22V12h6v10"/>
+  </symbol>
+
+  <symbol id="icon-delete-sidebar"  stroke-width="1" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M7 4a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2h4a1 1 0 1 1 0 2h-1.069l-.867 12.142A2 2 0 0 1 17.069 22H6.93a2 2 0 0 1-1.995-1.858L4.07 8H3a1 1 0 0 1 0-2h4zm2 2h6V4H9zM6.074 8l.857 12H17.07l.857-12zM10 10a1 1 0 0 1 1 1v6a1 1 0 1 1-2 0v-6a1 1 0 0 1 1-1m4 0a1 1 0 0 1 1 1v6a1 1 0 1 1-2 0v-6a1 1 0 0 1 1-1"/>
+  </symbol>
+
+  <symbol id="icon-filter" stroke="currentColor" fill="currentColor" stroke-width="1" viewBox="0 0 24 24">
+    <path d="M14.037 20.937a1.015 1.015 0 0 1-.518-.145l-3.334-2a2.551 2.551 0 0 1-1.233-2.176V12.091a1.526 1.526 0 0 0-.284-.891L4.013 4.658a1.01 1.01 0 0 1 .822-1.6h14.33a1.009 1.009 0 0 1 .822 1.6L15.332 11.2a1.527 1.527 0 0 0-.285.891v7.834a1.013 1.013 0 0 1-1.01 1.012ZM4.835 4.063L9.482 10.62a2.515 2.515 0 0 1 .47 1.471v4.524a1.543 1.543 0 0 0 .747 1.318l3.334 2 .014-7.843a2.516 2.516 0 0 1 .471-1.471l4.654-6.542Z"></path>
+  </symbol>
+
+  <symbol id="icon-dark" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/>
+  </symbol>
+
+  <symbol id="icon-light" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/>
+  </symbol>
+
+  <symbol id="arrow-left" viewBox="0 0 24 24">
+    <path fill="currentColor" d="m4.836 12l6.207 6.207l1.414-1.414L7.664 12l4.793-4.793l-1.414-1.414zm5.65 0l6.207 6.207l1.414-1.414L13.314 12l4.793-4.793l-1.414-1.414z"/>
+  </symbol>
+
+  <symbol id="arrow-right" viewBox="0 0 24 24">
+    <path fill="currentColor" d="m19.164 12l-6.207-6.207l-1.414 1.414L16.336 12l-4.793 4.793l1.414 1.414zm-5.65 0L7.307 5.793L5.893 7.207L10.686 12l-4.793 4.793l1.414 1.414z"/>
+  </symbol>
+
+  <symbol id="icon-menu" viewBox="0 0 24 24">
+    <path fill="currentColor" fill-rule="evenodd" d="M2 8a1 1 0 0 1 1-1h10.308a1 1 0 1 1 0 2H3a1 1 0 0 1-1-1Zm0-4a1 1 0 0 1 1-1h14a1 1 0 1 1 0 2H3a1 1 0 0 1-1-1Zm0 8a1 1 0 0 1 1-1h14a1 1 0 1 1 0 2H3a1 1 0 0 1-1-1Zm0 4a1 1 0 0 1 1-1h10.308a1 1 0 1 1 0 2H3a1 1 0 0 1-1-1Z" clip-rule="evenodd"/>
+  </symbol>
+
+  <symbol id="icon-save" viewBox="0 0 24 24">
+   <path fill="currentColor" d="M2 2h14.414L22 7.586V22H2zm2 2v16h2v-6h12v6h2V8.414L15.586 4H13v4H6V4zm4 0v2h3V4zm8 16v-4H8v4z"/>
+  </symbol>
+
+  <symbol id="icon-reset" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2v2a8 8 0 1 0 4.5 1.385V8h-2V2h6v2H18a9.99 9.99 0 0 1 4 8"/>
+  </symbol>
+
+  <symbol id="icon-delete-all" viewBox="0 0 24 24">
+    <path fill="currentColor" d="M15 18v-2h4v2zm0-8V8h7v2zm0 4v-2h6v2zM3 8H2V6h4V4.5h4V6h4v2h-1v9q0 .825-.587 1.413T11 19H5q-.825 0-1.412-.587T3 17zm2 0v9h6V8zm0 0v9z"/>
+  </symbol>
+
+    <symbol id="icon-delete" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4"/>
+    <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+    <path d="M8 12.5L3 17.5"/>
+    <path d="M3 12.5L8 17.5"/>
+  </symbol>
+
+ 
+</svg>
+
+
