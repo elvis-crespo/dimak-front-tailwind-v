@@ -1,22 +1,17 @@
-/* eslint-disable no-unused-vars */
 import Swal from "sweetalert2";
 import {
-  Container,
   FormContainer,
+  FormTitle,
+  FormSubtitle,
   FormField,
-  Input,
-  Label,
-  SectionTitle,
-  StyledForm,
-  SubmitButton,
-  Title,
-} from "../components/CustomFormStyled";
+  FormButton,
+} from "../components/Form";
 import { useForm } from "../Hooks/useForm";
 import axiosInstance from "../utils/axiosInstance";
-import { AnimatedContainerSlight } from "../components/Animations";
-import { BiSearchAlt } from "react-icons/bi";
 import { useState } from "react";
 import { validateFields } from "../utils/validateFields";
+import Layout from "../components/Layout";
+import Icon from "../components/Icon";
 
 export default function UpdateVehicle() {
   const { values, handleChange, resetForm, setValues } = useForm({
@@ -186,126 +181,111 @@ export default function UpdateVehicle() {
   };
 
   return (
-    <Container>
-      <AnimatedContainerSlight>
-        <FormContainer>
-          <Title>Actualizar Información de Vehículo</Title>
-          <StyledForm
-            onSubmit={handleFormSubmit}
-            onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
-          >
-            <SectionTitle>Detalles del Vehículo</SectionTitle>
+    <Layout>
+      <FormContainer onSubmit={handleFormSubmit}>
+        <FormTitle>Actualizar Información de Vehículo</FormTitle>
+        <FormSubtitle>Detalles del Vehículo</FormSubtitle>
 
-            {/* Input de placa con botón de búsqueda */}
-            <FormField>
-              <Label htmlFor="plate">
-                Placa <span style={{ color: "red" }}>*</span>
-              </Label>
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "10px" }}
-              >
-                <Input
-                  style={{ width: "95%" }}
-                  id="plate"
-                  name="plate"
-                  type="text"
-                  autoComplete="off"
-                  placeholder="Ej. AAA-1234 o AA-123A"
-                  required
-                  value={values.plate}
-                  onChange={handleChange}
-                />
-                <BiSearchAlt
-                  onClick={handleSearch}
-                  style={{ cursor: "pointer", fontSize: "1.5em" }}
-                />
-              </div>
-            </FormField>
+        <div className="md:col-span-2 flex items-center md:items-end justify-between flex-col md:flex-row gap-4">
+          <FormField
+            label="Placa"
+            id="plate"
+            required
+            placeholder="Ej. AAA-1234 o AA-123A"
+            value={values.plate}
+            onChange={handleChange}
+            className="w-full md:w-[75%]"
+          />
 
-            {isEditing && (
-              <>
-                <div
-                  style={{
-                    borderTop: "1px solid #ccc",
-                    width: "100%",
-                    margin: "1rem 0",
-                  }}
-                />
-                <FormField>
-                  <Label htmlFor="ownerName">
-                    Nombre del Cliente <span style={{ color: "red" }}>*</span>
-                  </Label>
-                  <Input
-                    id="ownerName"
-                    name="ownerName"
-                    type="text"
-                    autoComplete="off"
-                    required
-                    value={values.ownerName}
-                    onChange={handleChange}
-                    $hasError={!!errors.ownerName}
-                  />
-                  {errors.ownerName && (
-                    <span style={{ color: "red" }}>{errors.ownerName}</span>
-                  )}
-                </FormField>
+          <FormButton
+            icon={
+              <Icon name="icon-delete-all" className={"w-6 h-6 text-white"} />
+            }
+            text="Buscar"
+            type="submit"
+            color="blue"
+            onClick={handleSearch}
+            disabled={
+              !values.plate.trim() || values.plate === lastSearchedValue
+            }
+          />
+        </div>
 
-                <FormField>
-                  <Label htmlFor="brand">Marca</Label>
-                  <Input
-                    id="brand"
-                    name="brand"
-                    type="text"
-                    autoComplete="off"
-                    value={values.brand}
-                    onChange={handleChange}
-                    $hasError={!!errors.brand}
-                  />
-                  {errors.brand && (
-                    <span style={{ color: "red" }}>{errors.brand}</span>
-                  )}
-                </FormField>
+        {isEditing && (
+          <>
+            <div
+              style={{
+                borderTop: "1px solid #ccc",
+                width: "100%",
+                margin: "1rem 0",
+              }}
+              className="md:col-span-2"
+            />
+            <FormField
+              label="Placa"
+              id="plate"
+              required
+              value={initialValues?.plate || ""}
+              disabled
+            />
 
-                <FormField>
-                  <Label htmlFor="model">Modelo</Label>
-                  <Input
-                    id="model"
-                    name="model"
-                    type="text"
-                    autoComplete="off"
-                    value={values.model}
-                    onChange={handleChange}
-                    $hasError={!!errors.model}
-                  />
-                  {errors.model && (
-                    <span style={{ color: "red" }}>{errors.model}</span>
-                  )}
-                </FormField>
+            <FormField
+              id="ownerName"
+              label="Nombre del Cliente"
+              value={values.ownerName}
+              error={errors.ownerName}
+              onChange={handleChange}
+              required
+              className="md:col-span-2"
+            />
 
-                <FormField>
-                  <Label htmlFor="year">Año</Label>
-                  <Input
-                    id="year"
-                    name="year"
-                    type="number"
-                    autoComplete="off"
-                    placeholder="2025"
-                    value={values.year}
-                    onChange={handleChange}
-                    onWheel={(e) => e.target.blur()}
-                    $hasError={!!errors.year}
-                  />
-                  {errors.year && (
-                    <span style={{ color: "red" }}>{errors.year}</span>
-                  )}
-                </FormField>
+            <FormField
+              id="brand"
+              label="Marca"
+              value={values.brand}
+              error={errors.brand}
+              onChange={handleChange}
+            />
 
-                <SubmitButton type="submit">Actualizar</SubmitButton>
-              </>
-            )}
-          </StyledForm>
-        </FormContainer>
-      </AnimatedContainerSlight>
-    </Container>
+            <FormField
+              id="model"
+              label="Modelo"
+              value={values.model}
+              error={errors.model}
+              onChange={handleChange}
+            />
+
+            <FormField
+              id="year"
+              label="Año"
+              type="number"
+              value={values.year}
+              error={errors.year}
+              min={1900}
+              max={2100}
+              onChange={handleChange}
+              onKeyDown={(e) => {
+                if (e.key === "-" || e.key === "e") e.preventDefault();
+              }}
+              onWheel={(e) => e.target.blur()}
+            />
+            <FormSubtitle className="text-sm font-normal md:col-span-2">
+              Asegúrate de que todos los campos estén correctos antes de
+              actualizar.
+            </FormSubtitle>
+            <div className="flex items-center justify-center md:justify-end md:col-span-2 mt-4">
+              <FormButton
+                icon={
+                  <Icon name="icon-reset" className={"w-5 h-5 text-white"} />
+                }
+                text="Actualizar"
+                type="submit"
+                color="blue"
+              />
+            </div>
+          </>
+        )}
+      </FormContainer>
+    </Layout>
   );
 }

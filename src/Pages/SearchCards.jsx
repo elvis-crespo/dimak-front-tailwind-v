@@ -1,41 +1,26 @@
 import { NavLink } from "react-router-dom";
 import { Card } from "../components/Card";
-import { ResponsiveContainerCard } from "../components/CustomFormStyled";
-import { LuFileSearch } from "react-icons/lu";
-import { AnimatedContainer } from "../components/Animations";
-import { MdOutlineContentPasteSearch } from "react-icons/md";
+import Layout from "../components/Layout";
+import Icon from "../components/Icon";
 
 export default function SearchCards() {
   return (
     <>
-      <ResponsiveContainerCard>
-        <AnimatedContainer>
-          <div>
-            <NavLink to="/search-plate">
-              <Card title={"Vehículo"} subtitle={"Consultar por placa"}>
-                <MdOutlineContentPasteSearch
-                  style={{ fontSize: "4em", paddingBottom: "10px" }}
-                />
-              </Card>
-            </NavLink>
-          </div>
-        </AnimatedContainer>
-
-        <AnimatedContainer>
-          <div>
-            <NavLink to="/instllationsRecords">
-              <Card
-                title={"Instalación"}
-                subtitle={"Consultar por número de factura"}
-              >
-                <LuFileSearch
-                  style={{ fontSize: "4em", paddingBottom: "10px" }}
-                />
-              </Card>
-            </NavLink>
-          </div>
-        </AnimatedContainer>
-      </ResponsiveContainerCard>
+      <Layout className="md:flex-row justify-start gap-8 md:justify-evenly">
+        <NavLink to="/search-plate">
+          <Card title={"Vehículo"} subtitle={"Consultar por placa"}>
+            <Icon name="icon-home" className="w-18 h-18 text-white" />
+          </Card>
+        </NavLink>
+        <NavLink to="/instllationsRecords">
+          <Card
+            title={"Instalación"}
+            subtitle={"Consultar por número de factura"}
+          >
+            <Icon name="icon-save" className="w-14 h-14 text-white" />
+          </Card>
+        </NavLink>
+      </Layout>
     </>
   );
 }

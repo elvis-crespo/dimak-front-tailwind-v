@@ -226,8 +226,8 @@ export default function RegisterVehicle() {
             id="ownerName"
             label="Nombre del Cliente"
             value={values.ownerName}
-            onChange={handleChange}
             error={errors.ownerName}
+            onChange={handleChange}
             required
             className="md:col-span-2"
           />
@@ -238,8 +238,8 @@ export default function RegisterVehicle() {
             type="text"
             placeholder="Ej. AAA-1234 o AA-123A."
             value={values.plate}
-            onChange={handleChange}
             error={errors.plate}
+            onChange={handleChange}
             required
           />
 
@@ -267,8 +267,8 @@ export default function RegisterVehicle() {
               id="customBrand"
               label="Marca Personalizada"
               value={customBrand}
-              onChange={handleCustomBrandChange}
               error={errors.brand}
+              onChange={handleCustomBrandChange}
               className="md:col-span-2"
             />
           )}
@@ -304,21 +304,21 @@ export default function RegisterVehicle() {
           <FormField
             id="technicalFileNumber"
             label="Nº de Ficha Técnica"
-            value={values.technicalFileNumber}
-            onChange={handleChange}
             placeholder="Solo números"
-            required
+            value={values.technicalFileNumber}
             error={errors.technicalFileNumber}
+            onChange={handleChange}
             className="md:col-span-2"
+            required
           />
 
           <FormField
             id="invoiceNumber"
             label="Nº de Factura"
-            value={values.invoiceNumber}
-            onChange={handleChange}
             placeholder="Ej. 001-001-123456789"
+            value={values.invoiceNumber}
             error={errors.invoiceNumber}
+            onChange={handleChange}
             className="md:col-span-2"
           />
 
@@ -326,22 +326,21 @@ export default function RegisterVehicle() {
             id="technicianName"
             label="Técnico"
             value={values.technicianName}
-            onChange={handleChange}
             error={errors.technicianName}
+            onChange={handleChange}
           />
 
           <FormField
             id="date"
             label="Fecha"
             type="date"
-            required
             value={values.date ? values.date.split("T")[0] : ""}
-            onChange={handleChange}
             error={errors.date}
+            onChange={handleChange}
+            required
           />
 
           <FormField
-            id="installationCompleted"
             label="Instalación Completada"
             error={errors.installationCompleted}
             className="md:col-span-2"
@@ -357,24 +356,17 @@ export default function RegisterVehicle() {
             />
           </FormField>
 
-          <FormField className="md:col-span-2">
-            <label
-              htmlFor="installationPhoto"
-              className="text-sm font-medium text-gray-700 dark:text-gray-200"
-            >
-              Foto de Instalación
-            </label>
-
+          <FormField
+            label="Foto de Instalación"
+            error={errors.photoUrl}
+            className="md:col-span-2"
+          >
             <ImageUploader
               id="installationPhoto"
               title="Cargar Foto"
               image={image} // aquí pasas tu estado con la foto
               onFileChange={handleFileChange} // aquí manejas el cambio en tu form
             />
-
-            {errors.photoUrl && (
-              <span className="text-red-500 text-xs">{errors.photoUrl}</span>
-            )}
           </FormField>
 
           <div className="hidden md:flex justify-start  items-center mt-4">

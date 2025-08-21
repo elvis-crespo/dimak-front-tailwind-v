@@ -175,7 +175,7 @@ const ImageUploader = ({ image, onFileChange, title }) => {
                 showConfirmButton: false,
                 scrollbarPadding: false,
                 backdrop: `
-                rgba(0, 0, 0, 0.8)   /* casi negro */
+                rgba(0, 0, 0, 0.8)  
                 center top
                 no-repeat
               `,

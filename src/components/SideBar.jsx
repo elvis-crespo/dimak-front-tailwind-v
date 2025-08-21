@@ -111,7 +111,7 @@ export const Sidebar = ({ isAdmin = true }) => {
               label="Admin"
               isSidebarVisible={isSidebarVisible}
               active={location.pathname === "/register-installations"}
-              to="/register-installations"
+              to="/register-installation"
             />
             {isAdmin && (
               <>
@@ -126,6 +126,42 @@ export const Sidebar = ({ isAdmin = true }) => {
                   label="Eliminados"
                   isSidebarVisible={isSidebarVisible}
                   to="/delete-installation"
+                />
+                <SidebarItem
+                  icon={<Icon name="icon-reset" className="w-5 h-5" />}
+                  label="update vehicle"
+                  isSidebarVisible={isSidebarVisible}
+                  to="/update-vehicle"
+                />
+                <SidebarItem
+                  icon={<Icon name="icon-reset" className="w-5 h-5" />}
+                  label="update installation"
+                  isSidebarVisible={isSidebarVisible}
+                  to="/update-installation"
+                />
+                <SidebarItem
+                  icon={<Icon name="icon-save" className="w-5 h-5" />}
+                  label="Register Cards"
+                  isSidebarVisible={isSidebarVisible}
+                  to="/register"
+                />
+                <SidebarItem
+                  icon={<Icon name="icon-save" className="w-5 h-5" />}
+                  label="Search Cards"
+                  isSidebarVisible={isSidebarVisible}
+                  to="/search"
+                />
+                <SidebarItem
+                  icon={<Icon name="icon-reset" className="w-5 h-5" />}
+                  label="Update Cards"
+                  isSidebarVisible={isSidebarVisible}
+                  to="/update"
+                />
+                <SidebarItem
+                  icon={<Icon name="icon-delete" className="w-5 h-5" />}
+                  label="Delete Cards"
+                  isSidebarVisible={isSidebarVisible}
+                  to="/delete"
                 />
               </>
             )}

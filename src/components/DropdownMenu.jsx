@@ -54,7 +54,7 @@ const DropdownMenu = () => {
       {isOpen && (
         <div
           ref={menuRef}
-          className={`"animate-fadeInScale absolute top-16 right-4 max-w-xs w-full bg-white border border-gray-200 rounded-xl overflow-hidden shadow-[0_10px_25px_-5px_rgba(0,0,0,0.05),0_8px_10px_-6px_rgba(0,0,0,0.04)] 
+          className={`"animate-fadeInScale absolute z-50 top-16 right-4 max-w-xs w-full bg-white border border-gray-200 rounded-xl overflow-hidden shadow-[0_10px_25px_-5px_rgba(0,0,0,0.05),0_8px_10px_-6px_rgba(0,0,0,0.04)] 
           hover:shadow-[0_20px_25px_-5px_rgba(0,0,0,0.08),0_15px_15px_-6px_rgba(0,0,0,0.06)] transition-all duration-300" ${
             isOpen ? "animate-fadeInScale" : "animate-fadeOutScale"
           }`}

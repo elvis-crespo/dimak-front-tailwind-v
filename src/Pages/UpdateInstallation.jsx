@@ -1,24 +1,18 @@
 import { useForm } from "../Hooks/useForm";
 import {
-  Container,
   FormContainer,
+  FormTitle,
+  FormSubtitle,
   FormField,
-  Input,
-  Label,
-  SectionTitle,
-  StyledForm,
-  SubmitButton,
-  TextArea,
-  Title,
-} from "../components/CustomFormStyled";
-
+  FormButton,
+} from "../components/Form";
 import Swal from "sweetalert2";
 import { useState } from "react";
 import axiosInstance from "../utils/axiosInstance";
-import { AnimatedContainerSlight } from "../components/Animations.jsx";
 import { validateFields } from "../utils/validateFields.js";
 import ImageUploader from "../components/ImageUploader.jsx";
-import { BiSearchAlt } from "react-icons/bi";
+import Layout from "../components/Layout.jsx";
+import Icon from "../components/Icon.jsx";
 
 export default function UpdateInstallations() {
   const { values, handleChange, resetForm, setValues } = useForm({
@@ -239,163 +233,146 @@ export default function UpdateInstallations() {
   };
 
   return (
-    <Container>
-      <AnimatedContainerSlight>
-        <FormContainer style={{ margin: "30px 0" }} id="register">
-          <Title>Actualizar Información de Instalación</Title>
-          <StyledForm
-            onSubmit={handleFormSubmit}
-            onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
-          >
-            <SectionTitle>Detalles de la Instalación</SectionTitle>
+    <Layout>
+      <FormContainer
+        onSubmit={handleFormSubmit}
+      >
+        <FormTitle>Actualizar Información de Instalación</FormTitle>
+        <FormSubtitle>Detalles de la Instalación</FormSubtitle>
 
-            <FormField>
-              <Label htmlFor="technicalFileNumber">
-                Nº de Ficha Técnica <span style={{ color: "red" }}>*</span>
-              </Label>
-              <div
-                style={{ display: "flex", alignItems: "center", gap: "10px" }}
-              >
-                <Input
-                  style={{ width: "95%" }}
-                  id="technicalFileNumber"
-                  name="technicalFileNumber"
-                  type="text"
-                  autoComplete="off"
-                  placeholder={"Solo números"}
-                  required={true}
-                  value={values.technicalFileNumber}
-                  onChange={handleChange}
-                />
-                {errors.technicalFileNumber && (
-                  <span style={{ color: "red" }}>
-                    {errors.technicalFileNumber}
-                  </span>
-                )}
-                <BiSearchAlt
-                  onClick={handleSearch}
-                  style={{ cursor: "pointer", fontSize: "1.5em" }}
-                />
-              </div>
+        <div className="md:col-span-2 flex items-center md:items-end justify-between flex-col md:flex-row gap-4">
+          <FormField
+            label=" Nº de Ficha Técnica"
+            id="technicalFileNumber"
+            required
+            placeholder="Solo números"
+            value={values.technicalFileNumber}
+            onChange={handleChange}
+            className="w-full md:w-[75%]"
+          />
+
+          <FormButton
+            icon={
+              <Icon name="icon-delete-all" className={"w-6 h-6 text-white"} />
+            }
+            text="Buscar"
+            type="submit"
+            color="blue"
+            onClick={handleSearch}
+            disabled={
+              !values.technicalFileNumber.trim() ||
+              values.technicalFileNumber === lastSearchedValue
+            }
+          />
+        </div>
+
+        {isEditing && (
+          <>
+            <div
+              style={{
+                borderTop: "1px solid #ccc",
+                width: "100%",
+                margin: "1rem 0",
+              }}
+              className="md:col-span-2"
+            />
+
+            <FormField
+              label="Placa"
+              id="plateId"
+              value={initialValues?.plateId || ""}
+              required
+              disabled={true}
+              onCopy={(e) => e.preventDefault()}
+              onCut={(e) => e.preventDefault()}
+              onPaste={(e) => e.preventDefault()}
+              onSelect={(e) => e.preventDefault()}
+            />
+
+            <FormField
+              label=" Nº de Ficha Técnica"
+              id="technicalFileNumber"
+              value={initialValues?.technicalFileNumber || ""}
+              required
+              disabled
+              className="select-none pointer-events-none"
+            />
+
+            <FormField
+              label=" Nº de Factura"
+              id="invoiceNumber"
+              placeholder="Ej. 001-001-123456789"
+              value={initialValues?.invoiceNumber || ""}
+              required
+              disabled
+              className="md:col-span-2"
+            />
+
+            <FormField
+              id="technicianName"
+              label="Técnico"
+              value={values.technicianName}
+              onChange={handleChange}
+              error={errors.technicianName}
+            />
+
+            <FormField
+              id="date"
+              label="Fecha"
+              type="date"
+              value={values.date ? values.date.split("T")[0] : ""}
+              error={errors.date}
+              onChange={handleChange}
+              required
+            />
+
+            <FormField
+              label="Instalación Completada"
+              error={errors.installationCompleted}
+              className="md:col-span-2"
+            >
+              <textarea
+                id="installationCompleted"
+                name="installationCompleted"
+                autoComplete="off"
+                placeholder="Escribe una descripción"
+                value={values.installationCompleted}
+                onChange={handleChange}
+                className="px-4 py-2 text-base border border-gray-300 rounded-lg bg-[rgb(248,249,252)] dark:bg-[rgb(176,176,176)] dark:border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-gray-600 dark:focus:border-gray-500 outline-none"
+              />
             </FormField>
 
-            {isEditing && (
-              <>
-                <div
-                  style={{
-                    borderTop: "1px solid #ccc",
-                    width: "100%",
-                    margin: "1rem 0",
-                  }}
-                />
+            <FormField
+              label="Foto de Instalación"
+              error={errors.photoUrl}
+              className="md:col-span-2"
+            >
+              <ImageUploader
+                id="installationPhoto"
+                title="Actualizar Foto"
+                image={image} // aquí pasas tu estado con la foto
+                onFileChange={handleFileChange} // aquí manejas el cambio en tu form
+              />
+            </FormField>
 
-                <FormField>
-                  <Label htmlFor="plateId">Placa</Label>
-                  <Input
-                    id="plateId"
-                    name="plateId"
-                    type="text"
-                    autoComplete="off"
-                    placeholder="Ej. AAA-1234 o AA-123A"
-                    required
-                    value={values.plate}
-                    readOnly
-                    disabled
-                  />
-                </FormField>
+            <FormSubtitle className="text-sm font-normal md:col-span-2">
+              Asegúrate de que todos los campos estén correctos antes de
+              actualizar.
+            </FormSubtitle>
 
-                <FormField>
-                  <Label htmlFor="invoiceNumber">Nº de Factura</Label>
-                  <Input
-                    id="invoiceNumber"
-                    name="invoiceNumber"
-                    type="text"
-                    autoComplete="off"
-                    placeholder={"Ej. 001-001-123456789"}
-                    value={values.invoiceNumber}
-                    readOnly
-                    disabled
-                  />
-                  {errors.invoiceNumber && (
-                    <span style={{ color: "red" }}>{errors.invoiceNumber}</span>
-                  )}
-                </FormField>
-
-                <FormField>
-                  <Label htmlFor="technicianName">Técnico</Label>
-                  <Input
-                    id="technicianName"
-                    name="technicianName"
-                    type="text"
-                    autoComplete="off"
-                    value={values.technicianName}
-                    onChange={handleChange}
-                    $hasError={!!errors.technicianName}
-                  />
-                  {errors.technicianName && (
-                    <span style={{ color: "red" }}>
-                      {errors.technicianName}
-                    </span>
-                  )}
-                </FormField>
-
-                <FormField>
-                  <Label htmlFor="date">
-                    Fecha <span style={{ color: "red" }}>*</span>
-                  </Label>
-                  <Input
-                    id="date"
-                    name="date"
-                    type="date"
-                    autoComplete="off"
-                    required
-                    value={values.date ? values.date.split("T")[0] : ""}
-                    onChange={handleChange}
-                    $hasError={!!errors.date}
-                  />
-                  {errors.date && (
-                    <span style={{ color: "red" }}>{errors.date}</span>
-                  )}
-                </FormField>
-
-                <FormField>
-                  <Label htmlFor="installationCompleted">
-                    Instalación Completada
-                  </Label>
-                  <TextArea
-                    id="installationCompleted"
-                    name="installationCompleted"
-                    placeholder="Escribe una descripción"
-                    value={values.installationCompleted || undefined}
-                    onChange={handleChange}
-                    $hasError={!!errors.installationCompleted}
-                  />
-                  {errors.installationCompleted && (
-                    <span style={{ color: "red" }}>
-                      {errors.installationCompleted}
-                    </span>
-                  )}
-                </FormField>
-
-                <FormField>
-                  <Label htmlFor="installationPhoto">Foto de Instalación</Label>
-                  <ImageUploader
-                    onFileChange={handleFileChange}
-                    image={image}
-                    title={"Actualizar Foto"}
-                    $hasError={!!errors.photoUrl}
-                  />
-                  {errors.photoUrl && (
-                    <span style={{ color: "red" }}>{errors.photoUrl}</span>
-                  )}
-                </FormField>
-
-                <SubmitButton type="submit">Actualizar</SubmitButton>
-              </>
-            )}
-          </StyledForm>
-        </FormContainer>
-      </AnimatedContainerSlight>
-    </Container>
+            <div className="flex items-center justify-center md:justify-end md:col-span-2 mt-4">
+              <FormButton
+                icon={
+                  <Icon name="icon-reset" className={"w-5 h-5 text-white"} />
+                }
+                text="Actualizar"
+                type="submit"
+                color="blue"
+              />
+            </div>
+          </>
+        )}
+      </FormContainer>
+    </Layout>
   );
 }

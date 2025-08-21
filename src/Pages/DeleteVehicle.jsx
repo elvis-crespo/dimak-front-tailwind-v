@@ -118,7 +118,7 @@ export default function DeleteVehicle() {
       <Layout>
         <FormContainer onSubmit={handleFormSubmit} className>
           <FormTitle>Eliminar un Vehículo</FormTitle>
-          <FormSubtitle className="text-sm text-gray-600 dark:text-gray-400">
+          <FormSubtitle>
             Esta acción es irreversible y no se podrá recuperar el registro
             eliminado.
           </FormSubtitle>

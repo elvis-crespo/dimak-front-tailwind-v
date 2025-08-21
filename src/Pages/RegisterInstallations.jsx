@@ -64,7 +64,7 @@ export default function RegisterInstallations() {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
-    const validationErrors = validateForm(); // Validar el formulario
+    const validationErrors = validateForm(); 
 
     if (Object.keys(validationErrors).length > 0) {
       // Si hay errores, no enviar el formulario y mostrar los errores
@@ -221,13 +221,12 @@ export default function RegisterInstallations() {
           label="Fecha"
           type="date"
           required
-          value={values.date ? values.date.split("T")[0] : ""}
+          value={values.date ? values.date.split("T")[0] : ""}S
           onChange={handleChange}
           error={errors.date}
         />
 
         <FormField
-          id="installationCompleted"
           label="Instalación Completada"
           error={errors.installationCompleted}
           className="md:col-span-2"

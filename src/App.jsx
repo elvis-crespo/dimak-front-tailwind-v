@@ -10,23 +10,23 @@ import Layout from "./components/Layout";
 // import DropdownMenu from "./components/DropdownMenu";
 // import { BackgroundEffect } from "./components/BackgroundEffect";
 
-// const RegisterCards = React.lazy(() => import("./Pages/RegisterCards"));
+const RegisterCards = React.lazy(() => import("./Pages/RegisterCards"));
 const RegisterVehicle = React.lazy(() => import("./Pages/RegisterVehicle"));
 const ResgisterIntallations = React.lazy(() => import("./Pages/RegisterInstallations"));
 
-// const UpdateCards = React.lazy(() => import("./Pages/UpdateCards"));
-// const UpdateVehicle = React.lazy(() => import("./Pages/UpdateVehicle"));
-// const UpdateInstallation = React.lazy(() =>
-//   import("./Pages/UpdateInstallation")
-// );
+const UpdateCards = React.lazy(() => import("./Pages/UpdateCards"));
+const UpdateVehicle = React.lazy(() => import("./Pages/UpdateVehicle"));
+const UpdateInstallation = React.lazy(() =>
+  import("./Pages/UpdateInstallation")
+);
 
-// const SearchCards = React.lazy(() => import("./Pages/SearchCards"));
-// const SearchPlate = React.lazy(() => import("./Pages/SearchPlate"));
+const SearchCards = React.lazy(() => import("./Pages/SearchCards"));
+const SearchPlate = React.lazy(() => import("./Pages/SearchPlate"));
 // const InstallationsTable = React.lazy(() =>
 //   import("./Pages/InstallationsTable")
 // );
 
-// const DeleteCards = React.lazy(() => import("./Pages/DeleteCards"));
+const DeleteCards = React.lazy(() => import("./Pages/DeleteCards"));
 const DeleteVehicle = React.lazy(() => import("./Pages/DeleteVehicle"));
 const DeleteInstallation = React.lazy(() => import("./Pages/DeleteInstallation"));
 
@@ -79,21 +79,35 @@ function App() {
             }
           >
             <Route path="/home" element={<Home />} />
+            <Route path="/register" element={<RegisterCards />} />
             <Route path="/register-vehicle" element={<RegisterVehicle />} />
             <Route
-              path="/register-installations"
+              path="/register-installation"
               element={<ResgisterIntallations />}
             />
+            <Route path="/search" element={<SearchCards />} />
+            <Route path="/search-plate" element={<SearchPlate />} />
+
+            <Route path="/delete" element={<DeleteCards />} />
             <Route path="/delete-vehicle" element={<DeleteVehicle />} />
-            <Route path="/delete-installation" element={<DeleteInstallation />} />
+            <Route
+              path="/delete-installation"
+              element={<DeleteInstallation />}
+            />
+            <Route path="/update" element={<UpdateCards />} />
+            <Route path="/update-vehicle" element={<UpdateVehicle />} />
+            <Route
+              path="/update-installation"
+              element={<UpdateInstallation />}
+            />
             <Route
               path="/"
               element={
                 <>
                   <Layout>
-                    <h className="text-3xl text-amber-800 dark:text-amber-50">
+                    <h1 className="text-3xl text-amber-800 dark:text-amber-50">
                       Ruta principal
-                    </h>
+                    </h1>
                   </Layout>
                 </>
               }
