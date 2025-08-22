@@ -11,7 +11,7 @@ export default function InstallationsRecordsPopup({ plate }) {
     "Detalles de la Instalación",
     "Técnico",
     "Fecha",
-    "Foto",
+    "Imagen",
   ];
   const columnKeys = [
     "plateId",

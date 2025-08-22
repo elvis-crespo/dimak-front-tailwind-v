@@ -22,9 +22,9 @@ const UpdateInstallation = React.lazy(() =>
 
 const SearchCards = React.lazy(() => import("./Pages/SearchCards"));
 const SearchPlate = React.lazy(() => import("./Pages/SearchPlate"));
-// const InstallationsTable = React.lazy(() =>
-//   import("./Pages/InstallationsTable")
-// );
+const InstallationsTable = React.lazy(() =>
+  import("./Pages/InstallationsTable")
+);
 
 const DeleteCards = React.lazy(() => import("./Pages/DeleteCards"));
 const DeleteVehicle = React.lazy(() => import("./Pages/DeleteVehicle"));
@@ -87,6 +87,7 @@ function App() {
             />
             <Route path="/search" element={<SearchCards />} />
             <Route path="/search-plate" element={<SearchPlate />} />
+            <Route path="/instllations-records" element={<InstallationsTable />} />
 
             <Route path="/delete" element={<DeleteCards />} />
             <Route path="/delete-vehicle" element={<DeleteVehicle />} />

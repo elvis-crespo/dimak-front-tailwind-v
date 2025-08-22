@@ -12,7 +12,7 @@ export default function SearchCards() {
             <Icon name="icon-home" className="w-18 h-18 text-white" />
           </Card>
         </NavLink>
-        <NavLink to="/instllationsRecords">
+        <NavLink to="/instllations-records">
           <Card
             title={"Instalación"}
             subtitle={"Consultar por número de factura"}

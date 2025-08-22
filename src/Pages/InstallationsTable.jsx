@@ -1,13 +1,13 @@
-import { Container, Title } from "../components/CustomFormStyled";
-import { CustomerTable } from "../components/CustomTable";
+/* eslint-disable no-unused-vars */
 import { useState } from "react";
-import { SearchInput } from "../components/SearchInput";
 import Swal from "sweetalert2";
 import { validateFields } from "../utils/validateFields.js";
 import axiosInstance from "../utils/axiosInstance";
-import { AnimatedContainerSlight } from "../components/Animations.jsx";
+import Layout from "../components/Layout.jsx";
+import FormTitle from "../components/Form/FormTitle.jsx";
+import { CustomerTable } from "../components/CustomTable.jsx";
 
-export default function SearchFactura() {
+export default function InstallationsTable() {
   const columnsHeader = [
     "Placa",
     "Nº de Factura",
@@ -15,7 +15,7 @@ export default function SearchFactura() {
     "Detalles de la Instalación",
     "Técnico",
     "Fecha",
-    "Foto",
+    "Imagen",
   ];
   const columnKeys = [
     "plateId",
@@ -27,9 +27,10 @@ export default function SearchFactura() {
     "photoUrl",
   ];
 
+  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [lastSearchedValue, setLastSearchedValue] = useState("");
-  const [data, setData] = useState([]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -91,29 +92,57 @@ export default function SearchFactura() {
 
   return (
     <>
-      <Container style={{ justifyContent: "flex-start" }}>
-        <AnimatedContainerSlight>
-          <SearchInput
-            handleSubmit={handleSubmit}
-            inputValue={inputValue}
-            setInputValue={setInputValue}
-            text={"Ej. 001-001-123456789 "}
-            disabled={
-              !inputValue.trim() || inputValue.trim() === lastSearchedValue
-            }
-          />
-        </AnimatedContainerSlight>
-        {data && data.length > 0 && (
-          <>
-            <Title>Resultados de la busqueda:</Title>
-            <CustomerTable
-              data={data}
-              columnsHeader={columnsHeader}
-              columnKeys={columnKeys}
+      <Layout>
+        <div className="w-full max-w-7xl appear mx-auto mt-10 p-6 bg-white dark:bg-gray-900 shadow-lg rounded-lg font-display gap-4">
+          <FormTitle>Consulta de Instalaciones</FormTitle>
+          <form
+            className="flex flex-col md:flex-row gap-4 mb-6 mt-4"
+            onSubmit={handleSubmit}
+          >
+            <input
+              type="text"
+              id="invoiceNumber"
+              name="invoiceNumber"
+              autoComplete="off"
+              placeholder="Buscar por número de factura (001-001-123456789 o 001-001-op3456789)"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              className="border border-gray-300 dark:text-white rounded-lg px-4 py-2 w-full md:w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={isLoading}
             />
-          </>
-        )}
-      </Container>
+            <button
+              type="submit"
+              disabled={isLoading}
+              className={`font-semibold px-6 py-2 cursor-pointer rounded-lg transition ${
+                isLoading
+                  ? "bg-blue-400 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700 text-white"
+              }`}
+            >
+              {isLoading ? "Buscando..." : "Buscar"}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                alert("Ver Todos");
+              }}
+              disabled={isLoading}
+              className={`font-semibold px-6 py-2 cursor-pointer rounded-lg transition ${
+                isLoading
+                  ? "bg-gray-200 cursor-not-allowed"
+                  : "bg-gray-300 hover:bg-gray-400 text-gray-800"
+              }`}
+            >
+              {isLoading ? "Cargando..." : "Ver Todos"}
+            </button>
+          </form>
+          <CustomerTable
+            data={data}
+            columnsHeader={columnsHeader}
+            columnKeys={columnKeys}
+          />
+        </div>
+      </Layout>
     </>
   );
 }

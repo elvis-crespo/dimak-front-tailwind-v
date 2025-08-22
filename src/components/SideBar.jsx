@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 import ThemeToggle from "./ThemeToggle";
+import { Logomin } from "../../public/Logomin";
 
 export const Sidebar = ({ isAdmin = true }) => {
   const theme = useSelector((state) => state.theme.theme);
@@ -66,24 +67,28 @@ export const Sidebar = ({ isAdmin = true }) => {
           overflow-hidden transition-all duration-300
           ${isSidebarVisible ? "w-64 flex" : "w-[72px] hidden"} 
           md:flex xl:w-64
-        `}
+          `}
       >
         <div>
-          <div className="flex items-center justify-center h-16 rounded-xl bg-gray-100 dark:bg-gray-800 mb-8">
-            {theme === "dark" ? (
-              <img
-                src="/assets/images/logo-dark.svg"
-                alt="dimak-logo"
-                className="w-36 transition-all duration-500 animate-fadeInScale"
-              />
-            ) : (
-              <img
-                src="/assets/images/logo-light.svg"
-                alt="dimak-logo"
-                className="w-36 transition-all duration-500 animate-fadeInSlight"
-              />
-            )}
+          <div className="flex items-center justify-center h-16 rounded-xl xl:bg-gray-100 xl:dark:bg-gray-800 mb-8">
+            <Logomin
+              className={`w-10 h-10 xl:hidden transition-all duration-500 animate-fadeInScale ${
+                isSidebarVisible ? "hidden" : "flex"}`}
+              currentColor={theme === "dark" ? "#fff" : "#000"}
+            />
+
+            <img
+              src={
+                theme === "dark"
+                  ? "/assets/images/logo-dark.svg"
+                  : "/assets/images/logo-light.svg"
+              }
+              alt="dimak-logo"
+              className={`w-36 h-auto transition-all duration-500 animate-fadeInScale
+                ${isSidebarVisible ? "flex" : "hidden"} xl:flex`}
+            />
           </div>
+
           <nav className="flex flex-col gap-2 mt-6">
             <SidebarItem
               label="Home"
@@ -92,53 +97,8 @@ export const Sidebar = ({ isAdmin = true }) => {
               active={location.pathname === "/home"}
               to="/home"
             />
-            <SidebarItem
-              label="Dashboard"
-              icon={<Icon name="icon-home" />}
-              isSidebarVisible={isSidebarVisible}
-              active={location.pathname === "/"}
-              to="/"
-            />
-            <SidebarItem
-              icon={<Icon name="icon-delete-sidebar" />}
-              label="Usuarios"
-              isSidebarVisible={isSidebarVisible}
-              active={location.pathname === "/register-vehicle"}
-              to="/register-vehicle"
-            />
-            <SidebarItem
-              icon={<Icon name="icon-user" className="w-5 h-5" />}
-              label="Admin"
-              isSidebarVisible={isSidebarVisible}
-              active={location.pathname === "/register-installations"}
-              to="/register-installation"
-            />
             {isAdmin && (
               <>
-                <SidebarItem
-                  icon={<Icon name="icon-filter" className="w-5 h-5" />}
-                  label="Filtros"
-                  isSidebarVisible={isSidebarVisible}
-                  to="/delete-vehicle"
-                />
-                <SidebarItem
-                  icon={<Icon name="icon-delete" className="w-5 h-5" />}
-                  label="Eliminados"
-                  isSidebarVisible={isSidebarVisible}
-                  to="/delete-installation"
-                />
-                <SidebarItem
-                  icon={<Icon name="icon-reset" className="w-5 h-5" />}
-                  label="update vehicle"
-                  isSidebarVisible={isSidebarVisible}
-                  to="/update-vehicle"
-                />
-                <SidebarItem
-                  icon={<Icon name="icon-reset" className="w-5 h-5" />}
-                  label="update installation"
-                  isSidebarVisible={isSidebarVisible}
-                  to="/update-installation"
-                />
                 <SidebarItem
                   icon={<Icon name="icon-save" className="w-5 h-5" />}
                   label="Register Cards"

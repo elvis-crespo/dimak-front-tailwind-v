@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useForm } from "../Hooks/useForm";
-import Swal from "sweetalert2";
 import axiosInstance from "../utils/axiosInstance";
 import { carBrands, motorcycleBrands } from "../utils/brands";
 import { validateFields } from "../utils/validateFields.js";
@@ -15,6 +14,7 @@ import Layout from "../components/Layout";
 import { useNavigate } from "react-router";
 import ImageUploader from "../components/ImageUploader.jsx";
 import Icon from "../components/Icon.jsx";
+import { customSwal } from "../utils/swalConfig.js";
 
 export default function RegisterVehicle() {
   const [errors, setErrors] = useState({});
@@ -123,7 +123,7 @@ export default function RegisterVehicle() {
       if (key !== "photoUrl") formData.append(key, value);
     });
 
-    Swal.fire({
+      customSwal.fire({
       title: "¿Deseas Guardar esta Instalación?",
       showDenyButton: true,
       showCancelButton: true,
@@ -136,7 +136,7 @@ export default function RegisterVehicle() {
         const response = await HandleFetch(formData);
 
         if (response.isSuccess === true) {
-          Swal.fire({
+          customSwal.fire({
             title: "¡Guardado!",
             text: `Vehículo con placa ${values.plate} ha sido guardado.`,
             icon: "success",
@@ -155,7 +155,7 @@ export default function RegisterVehicle() {
           resetFormAndFile();
         }
       } else if (result.isDenied) {
-        Swal.fire("Cambios no guardados", "", "info");
+        customSwal.fire("Cambios no guardados", "", "info");
       }
     });
   };
@@ -187,21 +187,21 @@ export default function RegisterVehicle() {
     } catch (error) {
       // Verificar si el error es de red o de conexión
       if (error.message === "Network Error" || error.code === "ECONNREFUSED") {
-        Swal.fire({
+        customSwal.fire({
           icon: "error",
           title: "Oops...",
           text: "¡Hubo un problema al conectar con el servidor! Verifica si el servidor está en ejecución.",
         });
       } else if (!error.response) {
         // Otro error sin respuesta del servidor
-        Swal.fire({
+        customSwal.fire({
           icon: "error",
           title: "Error",
           text: "Hubo un problema desconocido con el servidor.",
         });
       } else {
         // Error con respuesta del servidor (404, 500, etc.)
-        Swal.fire({
+        customSwal.fire({
           icon: "error",
           title: "Error",
           text: `Error al guardar la instalación: ${

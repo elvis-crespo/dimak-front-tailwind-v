@@ -3,10 +3,10 @@ import {
   FormTitle,
 } from "../components/Form";
 import { useState } from "react";
-import Swal from "sweetalert2";
 import axiosInstance from "../utils/axiosInstance.js";
 import { validateFields } from "../utils/validateFields.js";
 import { CustomerTable } from "../components/CustomTable.jsx";
+import { customSwal } from "../utils/swalConfig.js";
 
 export default function SearchPlate() {
   const columnsHeader = ["Placa", "Propietario", "Marca", "Modelo", "Año"];
@@ -16,34 +16,32 @@ export default function SearchPlate() {
   const [inputValue, setInputValue] = useState("");
   const [lastSearchedValue, setLastSearchedValue] = useState("");
 
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!inputValue.trim()) {
-      return Swal.fire({
+      return customSwal.fire({
         icon: "warning",
         title: "Campo vacío",
         text: "Por favor, ingrese un valor en el campo de búsqueda.",
-        confirmButtonColor: "#1447e6",
       });
     }
 
     if (inputValue.trim() === lastSearchedValue) {
-      return Swal.fire({
+      return customSwal.fire({
         icon: "info",
         title: "Sin cambios",
         text: "Ya has buscado esta placa.",
-        confirmButtonColor: "#1447e6",
       });
     }
 
     // Validar la placa antes de enviar
     const validationError = validateFields.plate(inputValue.trim());
     if (validationError) {
-      Swal.fire({
+      customSwal.fire({
         icon: "error",
         title: "Error de Validación",
         text: validationError,
-        confirmButtonColor: "#1447e6",
       });
       return;
     }
@@ -77,34 +75,24 @@ export default function SearchPlate() {
       if (error.response && error.response.status === 404) {
         setData([]);
         // setAllFetched(false);
-        Swal.fire({
+        customSwal.fire({
           icon: "info",
           title: "No encontrado",
           text: `No existe ningún vehículo registrado con la placa ${inputValue}.`,
         });
-        if (
-          error.message === "Network Error" ||
-          error.code === "ECONNREFUSED"
-        ) {
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "¡Hubo un problema al conectar con el servidor! Verifica si el servidor está en ejecución.",
-          });
-        } else if (!error.response) {
-          // Otro tipo de error en la respuesta del servidor (sin respuesta)
-          Swal.fire({
-            icon: "error",
-            title: "Error del servidor",
-            text: "Ocurrió un error en el servidor. Por favor, inténtalo más tarde.",
-          });
-        } else {
-          Swal.fire({
-            icon: "warning",
-            title: "Error",
-            text: `Ocurrió un error al buscar al empleado. Error: ${error.response}`,
-          });
-        }
+      } else if (!error.response) {
+        // Otro tipo de error en la respuesta del servidor (sin respuesta)
+        customSwal.fire({
+          icon: "error",
+          title: "Error del servidor",
+          text: "Ocurrió un error en el servidor. Por favor, inténtalo más tarde.",
+        });
+      } else {
+        customSwal.fire({
+          icon: "warning",
+          title: "Error",
+          text: `Ocurrió un error al buscar el vehículo, por favor, reintenta. Error: ${error.response.message}`,
+        });
       }
       return error.response.data;
     } finally {
@@ -115,8 +103,8 @@ export default function SearchPlate() {
   return (
     <>
       <Layout>
-        <div className=" w-full max-w-3xl appear mx-auto mt-10 p-6 bg-white dark:bg-gray-900 shadow-lg rounded-lg font-display gap-4">
-          <FormTitle>Consiltar datos de vehículo</FormTitle>
+        <div className=" w-full max-w-4xl appear mx-auto mt-10 p-6 bg-white dark:bg-gray-900 shadow-lg rounded-lg font-display gap-4">
+          <FormTitle>Consulta de Vehículos</FormTitle>
           <form
             className="flex flex-col md:flex-row gap-4 mb-6 mt-4"
             onSubmit={handleSubmit}
@@ -129,11 +117,12 @@ export default function SearchPlate() {
               placeholder="Buscar por placa (AAA-1234 o AA-123A)"
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              className="border border-gray-300 rounded-lg px-4 py-2 w-full md:w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-300 rounded-lg dark:text-white px-4 py-2 w-full md:w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               disabled={isLoading}
             />
             <button
               type="submit"
+              title="Buscar vehículo por placa"
               disabled={isLoading}
               className={`font-semibold px-6 py-2 cursor-pointer rounded-lg transition ${
                 isLoading

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
 /* eslint-disable react/prop-types */
-export const Logomin = ({ currentColor }) => {
+export const Logomin = ({ currentColor, className }) => {
   return (
     <Link to="/">
       <svg
@@ -10,6 +10,7 @@ export const Logomin = ({ currentColor }) => {
         viewBox="0 0 2048 2048"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
+        className={className}
       >
         <path d="M0 0H2048V2048H0V0Z" fill="transparent" />
         <path
