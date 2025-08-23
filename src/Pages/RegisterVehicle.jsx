@@ -22,6 +22,8 @@ export default function RegisterVehicle() {
   const [isCustomBrandSelected, setIsCustomBrandSelected] = useState(false);
   const [filteredBrands, setFilteredBrands] = useState([]);
   const [image, setImage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const { values, handleChange, resetForm } = useForm({
@@ -133,7 +135,10 @@ export default function RegisterVehicle() {
       icon: "question",
     }).then(async (result) => {
       if (result.isConfirmed) {
+
+        setIsLoading(true); // Inicia el estado de carga
         const response = await HandleFetch(formData);
+        setIsLoading(false); // Finaliza el estado de carga
 
         if (response.isSuccess === true) {
           customSwal.fire({
@@ -176,7 +181,7 @@ export default function RegisterVehicle() {
     const url = `/vehicle/register`;
 
     try {
-      // Enviar solicitud con Axios
+      // Enviar solicitud con Axios.
       const response = await axiosInstance.post(url, formData, {
         headers: {
           "Content-Type": "multipart/form-data", // Indicar que es un envío con archivos
@@ -397,13 +402,16 @@ export default function RegisterVehicle() {
               color="blue"
               type="reset"
               onClick={resetFormAndFile}
+              isLoading={isLoading}
             />
 
             <FormButton
               icon={<Icon name="icon-save" className={"w-5 h-5 text-white"} />}
               text="Guardar"
+              loadingText="Guardando..."
               type="submit"
               color="teal"
+              isLoading={isLoading}
             />
           </div>
         </FormContainer>

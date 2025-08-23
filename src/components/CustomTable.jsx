@@ -10,6 +10,7 @@ export const CustomerTable = ({
   columnsHeader,
   columnKeys,
   showActions,
+  isLoading = false,
 }) => {
   const [expandedRows, setExpandedRows] = useState({});
 
@@ -46,17 +47,25 @@ export const CustomerTable = ({
     });
   };
 
+  // if (isLoading) {
+  //   return (
+  //     <div className="text-center py-6 text-gray-500 dark:text-gray-300">
+  //       Cargando registros...
+  //     </div>
+  //   );
+  // }
+
   return (
     <>
       <div className="w-full flex justify-center">
-        <div className="w-full max-w-[80vw] py-5 bg-white dark:bg-gray-900 rounded-xl shadow-md overflow-x-auto z-10">
-          <table className="w-full min-w-[800px] border-collapse bg-white dark:bg-gray-900">
+        <div className="w-full max-w-[80vw] py-5 bg-[rgb(248,249,252)] dark:bg-black rounded-xl shadow-md overflow-x-auto z-10">
+          <table className="w-full min-w-[800px] border-collapse">
             <thead className="text-gray-700 dark:text-gray-200">
               <tr>
                 {columnsHeader.map((column, index) => (
                   <th
                     key={index}
-                    className={`text-left px-2 py-1 lg:px-3 lg:py-2 text-sm border-b-2 border-gray-200 whitespace-nowrap ${
+                    className={`text-left px-2 py-1 lg:px-3 lg:py-2 text-sm border-b-2 border-gray-200 whitespace-nowrap transition-colors ${
                       index === 3
                         ? "max-w-[300px] overflow-hidden text-ellipsis"
                         : ""
@@ -73,12 +82,21 @@ export const CustomerTable = ({
               </tr>
             </thead>
 
-            <tbody className="bg-white dark:bg-gray-900 dark:text-white ">
-              {data.length > 0 ? (
+            <tbody className="bg-white dark:bg-gray-900 dark:text-white">
+              {isLoading ? (
+                <tr>
+                  <td
+                    colSpan={columnsHeader.length + (showActions ? 1 : 0)}
+                    className="text-center py-6 text-gray-500 dark:text-gray-300"
+                  >
+                    Cargando registros...
+                  </td>
+                </tr>
+              ) : data.length > 0 ? (
                 data.map((row, rowIndex) => (
                   <tr
                     key={rowIndex}
-                    className="border-b border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                    className="border-b border-gray-200 transition-colors"
                   >
                     {columnKeys.map((key, colIndex) => (
                       <td
@@ -88,26 +106,24 @@ export const CustomerTable = ({
                             toggleExpand(rowIndex);
                         }}
                         className={`px-2 py-1 lg:px-3 lg:py-2 h-[38px] text-sm align-middle text-start transition-all duration-300 
-                        ${
-                          key === "installationCompleted"
-                            ? `max-w-[300px] truncate cursor-pointer ${
-                                expandedRows[rowIndex]
-                                  ? "whitespace-normal"
-                                  : "whitespace-nowrap"
-                              }`
-                            : "whitespace-nowrap overflow-hidden text-ellipsis"
+                          ${
+                            key === "installationCompleted"
+                              ? `max-w-[300px] truncate cursor-pointer ${
+                                  expandedRows[rowIndex]
+                                    ? "whitespace-normal"
+                                    : "whitespace-nowrap"
+                                }`
+                              : "whitespace-nowrap overflow-hidden text-ellipsis"
                           }
                         `}
                       >
                         {key === "photoUrl" ? (
                           row[key] ? (
                             <img
-                              src={row[key]} // Preview the image. Ensure this is a valid URL
+                              src={row[key]}
                               alt="Imagen"
                               className="w-12 h-12 rounded-md cursor-pointer object-cover"
-                              onClick={() => {
-                                showImage(row[key]); // Show the image in a modal
-                              }}
+                              onClick={() => showImage(row[key])}
                             />
                           ) : (
                             "No disponible"
@@ -123,7 +139,6 @@ export const CustomerTable = ({
                         )}
                       </td>
                     ))}
-
                     {showActions && (
                       <td className="px-2 py-1 lg:px-3 lg:py-2 text-sm align-middle text-start">
                         <button
@@ -139,8 +154,8 @@ export const CustomerTable = ({
               ) : (
                 <tr>
                   <td
-                    colSpan={columnsHeader.length + 1}
-                    className="text-center py-6 text-gray-500"
+                    colSpan={columnsHeader.length + (showActions ? 1 : 0)}
+                    className="text-center py-6 text-gray-500 bg-[rgb(248,249,252)] dark:bg-black"
                   >
                     No hay datos disponibles
                   </td>

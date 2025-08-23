@@ -1,4 +1,3 @@
-import Swal from "sweetalert2";
 import {
   FormContainer,
   FormTitle,
@@ -11,14 +10,32 @@ import axiosInstance from "../utils/axiosInstance";
 import { validateFields } from "../utils/validateFields.js";
 import Layout from "../components/Layout.jsx";
 import Icon from "../components/Icon.jsx";
+import { customSwal } from "../utils/swalConfig.js";
 
 export default function DeleteInstallation() {
   const [inputValue, setInputValue] = useState("");
   const [lastSearchedValue, setLastSearchedValue] = useState("");
   const [deleteType, setDeleteType] = useState("invoice"); 
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+
+    if (!inputValue.trim()) {
+          return customSwal.fire({
+            icon: "warning",
+            title: "Campo vacío",
+            text: "Por favor, ingrese un valor en el campo de búsqueda.",
+          });
+        }
+    
+        if (inputValue.trim() === lastSearchedValue) {
+          return customSwal.fire({
+            icon: "info",
+            title: "Sin cambios",
+            text: "Ya has buscado esta instalación.",
+          });
+        }
 
     const validationError =
     deleteType === "invoice"
@@ -26,7 +43,7 @@ export default function DeleteInstallation() {
       : validateFields.technicalFileNumber(inputValue.trim()); 
   
   if (validationError) {
-    Swal.fire({
+    customSwal.fire({
       icon: "error",
       title: "Error de Validación",
       text: validationError,
@@ -34,7 +51,7 @@ export default function DeleteInstallation() {
     return;
   }
   
-    Swal.fire({
+    customSwal.fire({
       title: `¿Estás seguro?`,
       html: `¡No podrás revertir esta acción!<br />Se eliminará la instalación con ${
         deleteType === "invoice" ? "número de factura" : "expediente técnico"
@@ -52,7 +69,7 @@ export default function DeleteInstallation() {
         setLastSearchedValue(inputValue.trim());
 
         if (response.isSuccess) {
-          Swal.fire({
+          customSwal.fire({
             title: "¡Eliminado!",
             text: `Registro con ${
               deleteType === "invoice" ? "factura" : "expediente"
@@ -61,7 +78,7 @@ export default function DeleteInstallation() {
           });
           setInputValue("");
         } else {
-          Swal.fire({
+          customSwal.fire({
             title: "Error",
             text: response.message || "Hubo un problema al eliminar el registro.",
             icon: "error",
@@ -78,17 +95,20 @@ export default function DeleteInstallation() {
         : `/installation/delete-by-technical-file?technicalFileNumber=${inputValue}`;
 
     try {
+      setIsLoading(true);
       const response = await axiosInstance.delete(endpoint, {
         headers: { "Content-Type": "application/json" },
       });
       return response.data;
     } catch (error) {
-      Swal.fire({
+      customSwal.fire({
         icon: "error",
         title: "Error",
         text: `Error al eliminar: ${error.response?.data?.message || error.message}`,
       });
       return error.response?.data || { isSuccess: false };
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -142,11 +162,13 @@ export default function DeleteInstallation() {
           <FormButton
             icon={<Icon name="icon-delete" className={"w-5 h-5 text-white"} />}
             text="Eliminar"
+            loadingText="Eliminando..."
             color="red"
             type="submit"
             disabled={
               !inputValue.trim() || inputValue.trim() === lastSearchedValue
             }
+            isLoading={isLoading}
           />
         </div>
       </FormContainer>

@@ -11,6 +11,9 @@
   --secondary-color-dark: #222222;
   --color-text-dark: #fff0f0;
 
+  --color-logo-light: #000000;
+  --color-logo-dark: red;
+
   --animate-fadeInScale: fadeInScale 1s ease forwards;
   --animate-fadeInSlight: fadeInSlight 1.5s ease forwards;
   --animate-fadeOutScale: fadeOutScale 1s ease forwards;

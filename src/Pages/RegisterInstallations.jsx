@@ -7,7 +7,6 @@ import {
   FormButton,
 } from "../components/Form";
 
-import Swal from "sweetalert2";
 import { useState } from "react";
 import axiosInstance from "../utils/axiosInstance";
 import { validateFields } from "../utils/validateFields.js";
@@ -15,6 +14,7 @@ import ImageUploader from "../components/ImageUploader.jsx";
 import Layout from "../components/Layout.jsx";
 import Icon from "../components/Icon.jsx";
 import { useNavigate } from "react-router";
+import { customSwal } from "../utils/swalConfig.js";
 
 export default function RegisterInstallations() {
   const { values, handleChange, resetForm } = useForm({
@@ -29,6 +29,7 @@ export default function RegisterInstallations() {
   // Estado para almacenar los errores de validación
   const [errors, setErrors] = useState({});
   const [image, setImage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
    const navigate = useNavigate();
 
   // Función para manejar la imagen subida
@@ -88,7 +89,7 @@ export default function RegisterInstallations() {
       if (key !== "photoUrl") formData.append(key, value);
     });
 
-    Swal.fire({
+    customSwal.fire({
       title: "¿Deseas Guardar esta Instalación?",
       showDenyButton: true,
       showCancelButton: true,
@@ -97,10 +98,13 @@ export default function RegisterInstallations() {
       cancelButtonText: "Cancelar",
     }).then(async (result) => {
       if (result.isConfirmed) {
+
+        setIsLoading(true); 
         const response = await HandleFetch(formData);
+        setIsLoading(false);
 
         if (response.isSuccess === true) {
-          Swal.fire({
+          customSwal.fire({
             title: "¡Guardado!",
             text: `Instalación con placa ${values.plate} ha sido guardada.`,
             icon: "success",
@@ -119,7 +123,7 @@ export default function RegisterInstallations() {
           resetFormAndFile();
         }
       } else if (result.isDenied) {
-        Swal.fire("Cambios no guardados", "", "info");
+        customSwal.fire("Cambios no guardados", "", "info");
       }
     });
   };
@@ -138,19 +142,19 @@ export default function RegisterInstallations() {
     } catch (error) {
       console.log( error );
       if (error.message === "Network Error" || error.code === "ECONNREFUSED") {
-        Swal.fire({
+        customSwal.fire({
           icon: "error",
           title: "Oops...",
           text: "¡Hubo un problema al conectar con el servidor! Verifica si el servidor está en ejecución.",
         });
       } else if (!error.response) {
-        Swal.fire({
+        customSwal.fire({
           icon: "error",
           title: "Error",
           text: "Hubo un problema desconocido con el servidor.",
         });
       } else {
-        Swal.fire({
+        customSwal.fire({
           icon: "error",
           title: "Error",
           text: `Error al guardar la instalación: ${
@@ -290,13 +294,16 @@ export default function RegisterInstallations() {
             color={"blue"}
             type={"reset"}
             onClick={resetFormAndFile}
+            isLoading={isLoading}
           />
 
           <FormButton
             icon={<Icon name="icon-save" className={"w-5 h-5 text-white"} />}
             text="Guardar"
+            loadingText="Guardando..."
             type={"submit"}
             color={"teal"}
+            isLoading={isLoading}
           />
         </div>
       </FormContainer>

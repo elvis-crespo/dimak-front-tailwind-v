@@ -2,11 +2,13 @@
 const FormButton = ({
   icon,
   text,
+  loadingText = "Procesando...",
   color = "teal",
   type,
   className,
   disabled,
   onClick,
+  isLoading = false,
 }) => {
   const colorClasses = {
     red: {
@@ -36,8 +38,8 @@ const FormButton = ({
   return (
     <button
       className={`flex w-32 h-[42px] rounded-md overflow-hidden shadow-md group ${className} ${
-                disabled ? "cursor-not-allowed opacity-70" : "cursor-pointer"
-              }`}
+        disabled ? "cursor-not-allowed opacity-70" : "cursor-pointer"
+      } ${isLoading ? "w-36 opacity-70 cursor-not-allowed" : ""}`}
       type={type}
       onClick={onClick}
       disabled={disabled}
@@ -51,7 +53,7 @@ const FormButton = ({
       <span
         className={`flex w-[65%] h-full items-center justify-center text-white transition-colors duration-200 ${textClass}`}
       >
-        {text}
+        {isLoading ? loadingText : text}
       </span>
     </button>
   );

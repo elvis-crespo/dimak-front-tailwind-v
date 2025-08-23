@@ -1,4 +1,3 @@
-import Swal from "sweetalert2";
 import {
   FormContainer,
   FormTitle,
@@ -12,6 +11,7 @@ import { useState } from "react";
 import { validateFields } from "../utils/validateFields";
 import Layout from "../components/Layout";
 import Icon from "../components/Icon";
+import { customSwal } from "../utils/swalConfig";
 
 export default function UpdateVehicle() {
   const { values, handleChange, resetForm, setValues } = useForm({
@@ -24,13 +24,14 @@ export default function UpdateVehicle() {
 
   const [lastSearchedValue, setLastSearchedValue] = useState("");
   const [isEditing, setIsEditing] = useState(false);
-  const [errors, setErrors] = useState({});
   const [initialValues, setInitialValues] = useState(null);
+  const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSearch = async () => {
     const validationError = validateFields.plate(values.plate.trim());
     if (validationError) {
-      Swal.fire({
+      customSwal.fire({
         icon: "error",
         title: "Error de Validación",
         text: validationError,
@@ -44,6 +45,7 @@ export default function UpdateVehicle() {
     setLastSearchedValue(values.plate.trim());
 
     try {
+      setIsLoading(true);
       const response = await axiosInstance.get(
         `/vehicle/search-plate?plate=${values.plate}`
       );
@@ -63,7 +65,7 @@ export default function UpdateVehicle() {
         setInitialValues(vehicleData); // Guardamos los valores iniciales
         setIsEditing(true);
       } else {
-        Swal.fire({
+        customSwal.fire({
           title: "Error",
           text:
             response.data.message || "No se encontraron datos para esa placa.",
@@ -71,7 +73,7 @@ export default function UpdateVehicle() {
         });
       }
     } catch (error) {
-      Swal.fire({
+      customSwal.fire({
         title: "Error",
         text: `${
           error.response?.data?.message ||
@@ -79,6 +81,8 @@ export default function UpdateVehicle() {
         }`,
         icon: "error",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -103,7 +107,7 @@ export default function UpdateVehicle() {
     }
 
     if (!hasChanges()) {
-      Swal.fire({
+      customSwal.fire({
         title: "No hay cambios",
         text: "No se han realizado cambios en los datos del vehículo.",
         icon: "info",
@@ -111,7 +115,7 @@ export default function UpdateVehicle() {
       return;
     }
 
-    Swal.fire({
+    customSwal.fire({
       title: "¿Quieres guardar los cambios?",
       showDenyButton: true,
       showCancelButton: true,
@@ -122,7 +126,7 @@ export default function UpdateVehicle() {
         const response = await handleFetch();
 
         if (response.isSuccess) {
-          Swal.fire({
+          customSwal.fire({
             title: "¡Actualizado!",
             text: `Vehículo con placa ${values.plate} ha sido actualizado.`,
             icon: "success",
@@ -134,7 +138,7 @@ export default function UpdateVehicle() {
           setLastSearchedValue(""); // Limpiar el último valor buscado
           setIsEditing(false); // Deshabilita edición después de actualizar
         } else {
-          Swal.fire({
+          customSwal.fire({
             title: "Error",
             text:
               response.message || "Hubo un problema al actualizar el vehículo.",
@@ -155,7 +159,7 @@ export default function UpdateVehicle() {
 
       return response.data;
     } catch (error) {
-      Swal.fire({
+      customSwal.fire({
         icon: "error",
         title: "Error",
         text:
@@ -202,12 +206,14 @@ export default function UpdateVehicle() {
               <Icon name="icon-delete-all" className={"w-6 h-6 text-white"} />
             }
             text="Buscar"
+            loadingText="Buscando..."
             type="submit"
             color="blue"
             onClick={handleSearch}
             disabled={
               !values.plate.trim() || values.plate === lastSearchedValue
             }
+            isLoading={isLoading}
           />
         </div>
 
@@ -279,8 +285,11 @@ export default function UpdateVehicle() {
                   <Icon name="icon-reset" className={"w-5 h-5 text-white"} />
                 }
                 text="Actualizar"
+                loadingText="Actualizando..."
                 type="submit"
                 color="blue"
+                isLoading={isLoading}
+                disabled={!hasChanges()}
               />
             </div>
           </>

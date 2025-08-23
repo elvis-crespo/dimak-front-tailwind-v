@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { useState } from "react";
 import Swal from "sweetalert2";
 import { validateFields } from "../utils/validateFields.js";
@@ -6,6 +5,9 @@ import axiosInstance from "../utils/axiosInstance";
 import Layout from "../components/Layout.jsx";
 import FormTitle from "../components/Form/FormTitle.jsx";
 import { CustomerTable } from "../components/CustomTable.jsx";
+import { customSwal } from "../utils/swalConfig.js";
+import FormButton from "../components/Form/FormButton.jsx";
+import Icon from "../components/Icon.jsx";
 
 export default function InstallationsTable() {
   const columnsHeader = [
@@ -35,7 +37,22 @@ export default function InstallationsTable() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (inputValue.trim() === lastSearchedValue) return;
+    event.preventDefault();
+    if (!inputValue.trim()) {
+      return customSwal.fire({
+        icon: "warning",
+        title: "Campo vacío",
+        text: "Por favor, ingrese un valor en el campo de búsqueda.",
+      });
+    }
+
+    if (inputValue.trim() === lastSearchedValue) {
+      return customSwal.fire({
+        icon: "info",
+        title: "Sin cambios",
+        text: "Ya has buscado esta Nº de Factura.",
+      });
+    }
 
     // Validar la placa antes de enviar
     const validationError = validateFields.invoiceNumber(inputValue.trim());
@@ -47,6 +64,7 @@ export default function InstallationsTable() {
       });
       return;
     }
+    setLastSearchedValue(inputValue.trim()); // Limpia el último valor buscado.
 
     const response = await handleFetch();
 
@@ -58,6 +76,8 @@ export default function InstallationsTable() {
   };
 
   const handleFetch = async () => {
+    setIsLoading(true);
+    setData([]);
     try {
       const response = await axiosInstance.get(
         `/installation/?invoiceNumber=${inputValue}`,
@@ -69,31 +89,39 @@ export default function InstallationsTable() {
       );
       return response.data;
     } catch (error) {
-      // Verifica si el error es de red (servidor caído o no accesible)
-      if (error.message === "Network Error" || error.code === "ECONNREFUSED") {
-        // Error de conexión, el servidor no está disponible
-        Swal.fire({
+      // No se encontró la instalación
+      if (error.response && error.response.status === 404) {
+        setData([]);
+        // setAllFetched(false);
+        customSwal.fire({
+          icon: "info",
+          title: "No encontrado",
+          text: `No existe ninguna instalación registrada con el Nº de Factura ${inputValue}.`,
+        });
+      } else if (!error.response) {
+        // Otro tipo de error en la respuesta del servidor (sin respuesta)
+        customSwal.fire({
           icon: "error",
-          title: "Oops...",
-          text: "¡Hubo un problema al conectar con el servidor! Verifica si el servidor está en ejecución.",
+          title: "Error del servidor",
+          text: "Ocurrió un error en el servidor. Por favor, inténtalo más tarde.",
         });
       } else {
-        // Si hay una respuesta del servidor con un error (404, 500, etc.)
-        Swal.fire({
-          icon: "error",
+        customSwal.fire({
+          icon: "warning",
           title: "Error",
-          text: `${error.response.data?.message || error.message}`,
+          text: `Ocurrió un error al buscar el vehículo, por favor, reintenta. Error: ${error.message}`,
         });
       }
-
       return error.response.data;
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <>
       <Layout>
-        <div className="w-full max-w-7xl appear mx-auto mt-10 p-6 bg-white dark:bg-gray-900 shadow-lg rounded-lg font-display gap-4">
+        <div className="w-full max-w-7xl appear mx-auto mt-10 p-6 bg-[rgb(248,249,252)] dark:bg-black shadow-lg dark:shadow-gray-900 rounded-lg font-display gap-4">
           <FormTitle>Consulta de Instalaciones</FormTitle>
           <form
             className="flex flex-col md:flex-row gap-4 mb-6 mt-4"
@@ -110,36 +138,49 @@ export default function InstallationsTable() {
               className="border border-gray-300 dark:text-white rounded-lg px-4 py-2 w-full md:w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               disabled={isLoading}
             />
-            <button
-              type="submit"
-              disabled={isLoading}
-              className={`font-semibold px-6 py-2 cursor-pointer rounded-lg transition ${
-                isLoading
-                  ? "bg-blue-400 cursor-not-allowed"
-                  : "bg-blue-600 hover:bg-blue-700 text-white"
-              }`}
-            >
-              {isLoading ? "Buscando..." : "Buscar"}
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                alert("Ver Todos");
-              }}
-              disabled={isLoading}
-              className={`font-semibold px-6 py-2 cursor-pointer rounded-lg transition ${
-                isLoading
-                  ? "bg-gray-200 cursor-not-allowed"
-                  : "bg-gray-300 hover:bg-gray-400 text-gray-800"
-              }`}
-            >
-              {isLoading ? "Cargando..." : "Ver Todos"}
-            </button>
+            <div className="flex items-center justify-start md:col-span-2 gap-4">
+              <FormButton
+                icon={
+                  <Icon
+                    name="icon-delete-all"
+                    className={"w-6 h-6 text-white"}
+                  />
+                }
+                text="Buscar"
+                loadingText="Buscando..."
+                color="blue"
+                type="submit"
+                disabled={isLoading}
+                isLoading={isLoading}
+              />
+              <FormButton
+                icon={
+                  <Icon
+                    name="icon-delete-all"
+                    className={"w-6 h-6 text-white"}
+                  />
+                }
+                text="Ver Todos"
+                loadingText="Cargando..."
+                color="blue"
+                type="submit"
+                disabled
+                className={"w-32"}
+                onClick={() => {
+                  alert("Ver Todos");
+                }}
+                isLoading={isLoading}
+                // disabled={
+                //   !inputValue.trim() || inputValue.trim() === lastSearchedValue
+                // }
+              />
+            </div>
           </form>
           <CustomerTable
             data={data}
             columnsHeader={columnsHeader}
             columnKeys={columnKeys}
+            isLoading={isLoading}
           />
         </div>
       </Layout>

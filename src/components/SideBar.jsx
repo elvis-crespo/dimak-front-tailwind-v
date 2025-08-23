@@ -1,13 +1,14 @@
-/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import { useEffect, useRef, useState } from "react";
-import Icon from "./Icon";
+import Icon from "./Icons/Icon";
 import SidebarItem from "./SidebarItem";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 import ThemeToggle from "./ThemeToggle";
 import { Logomin } from "../../public/Logomin";
+import Particles from "./Particles";
 
 export const Sidebar = ({ isAdmin = true }) => {
   const theme = useSelector((state) => state.theme.theme);
@@ -40,7 +41,7 @@ export const Sidebar = ({ isAdmin = true }) => {
   };
 
   const handleMenuItemClick = (path) => {
-    navigate(path); // Redirige a la ruta deseada
+    navigate(path);
   };
 
   useEffect(() => {
@@ -55,28 +56,36 @@ export const Sidebar = ({ isAdmin = true }) => {
     <>
       <Icon
         name="icon-menu"
-        className="z-10 w-6 h-6 absolute top-5 left-5 md:hidden "
+        className="z-10 w-6 h-6 absolute top-5 left-5 md:hidden"
         onClick={toggleSidebarVisibility}
       />
 
       <aside
         ref={sidebarRef}
         className={`
-          fixed z-10 left-0 top-0 h-full p-4 flex-col justify-between
-          border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900
-          overflow-hidden transition-all duration-300
-          ${isSidebarVisible ? "w-64 flex" : "w-[72px] hidden"} 
-          md:flex xl:w-64
-          `}
+          fixed z-50 left-0 top-0 h-full p-4 flex flex-col justify-between
+          border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-black
+          overflow-hidden transition-all duration-300 ease-in-out
+          ${isSidebarVisible ? "w-64" : "w-[72px]"}
+          md:flex md:${isSidebarVisible ? "w-64 flex" : "w-[72px] hidden"}
+          xl:w-64
+        `}
       >
-        <div>
-          <div className="flex items-center justify-center h-16 rounded-xl xl:bg-gray-100 xl:dark:bg-gray-800 mb-8">
+        <Particles enableMouseInteraction={true} />
+        <div className="z-10">
+          <div className="flex items-center justify-center h-16 rounded-xl mb-8 relative">
             <Logomin
-              className={`w-10 h-10 xl:hidden transition-all duration-500 animate-fadeInScale ${
-                isSidebarVisible ? "hidden" : "flex"}`}
+              className={`
+                w-10 h-10 transition-all duration-300
+                ${
+                  isSidebarVisible
+                    ? "opacity-0 scale-0"
+                    : "opacity-100 scale-100"
+                }
+                xl:opacity-0 xl:scale-0
+              `}
               currentColor={theme === "dark" ? "#fff" : "#000"}
             />
-
             <img
               src={
                 theme === "dark"
@@ -84,8 +93,15 @@ export const Sidebar = ({ isAdmin = true }) => {
                   : "/assets/images/logo-light.svg"
               }
               alt="dimak-logo"
-              className={`w-36 h-auto transition-all duration-500 animate-fadeInScale
-                ${isSidebarVisible ? "flex" : "hidden"} xl:flex`}
+              className={`
+                w-36 h-auto absolute transition-all duration-300
+                ${
+                  isSidebarVisible
+                    ? "opacity-100 scale-100"
+                    : "opacity-0 scale-0"
+                }
+                xl:opacity-100 xl:scale-100
+              `}
             />
           </div>
 
@@ -128,7 +144,7 @@ export const Sidebar = ({ isAdmin = true }) => {
           </nav>
         </div>
 
-        <div className="flex flex-col items-center gap-4">
+        <div className="z-50 flex flex-col items-center gap-4">
           <ThemeToggle />
           <button
             ref={toggleButtonRef}
@@ -136,14 +152,11 @@ export const Sidebar = ({ isAdmin = true }) => {
             className="w-10 h-10 flex items-center justify-center rounded-full xl:hidden bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700"
           >
             {isSidebarVisible ? (
-              <Icon
-                name="arrow-left"
-                className={"transition-all duration-300"}
-              />
+              <Icon name="arrow-left" className="transition-all duration-300" />
             ) : (
               <Icon
                 name="arrow-right"
-                className={"transition-all duration-300"}
+                className="transition-all duration-300"
               />
             )}
           </button>

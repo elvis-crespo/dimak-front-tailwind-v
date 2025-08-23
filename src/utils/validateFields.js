@@ -3,7 +3,7 @@ export const validateFields = {
     const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/; // Letras, tildes, 'ñ' y espacios
     if (!value) return "El nombre del propietario es obligatorio.";
     if (!regex.test(value))
-      return "El nombre solo puede contener letras, tildes, la letra 'ñ' y espacios.";
+      return "El nombre del propietario solo puede contener letras, tildes y espacios.";
     return null;
   },
 
@@ -20,7 +20,7 @@ export const validateFields = {
   brand: (value) => {
     const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\säëïöüÄËÏÖÜ-]+$/; // Permite letras, tildes, 'ñ', diéresis, guiones y espacios
     if (value && !regex.test(value)) {
-      return "La marca solo puede contener letras, tildes, la letra 'ñ', diéresis, guiones y espacios.";
+      return "La marca solo puede contener letras, tildes, 'ñ', diéresis, guiones y espacios.";
     }
     return null;
   },
@@ -28,7 +28,7 @@ export const validateFields = {
   model: (value) => {
     const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s]*$/; // Letras, tildes, 'ñ', números y espacios (no es obligatorio)
     if (value && !regex.test(value)) {
-      return "El modelo solo puede contener letras, tildes, la letra 'ñ', números y espacios.";
+      return "El modelo solo puede contener letras, tildes, números y espacios.";
     }
     return null;
   },
@@ -52,7 +52,7 @@ export const validateFields = {
     const regex = /^\d*$/; // Solo números
     if (!value) return "La ficha técnica es obligatoria.";
     if (value && !regex.test(value))
-      return "El número de ficha técnica solo puede contener números.";
+      return "La ficha técnica solo puede contener números.";
     return null; // No es obligatorio
   },
 
@@ -60,9 +60,9 @@ export const validateFields = {
     const regex = /^\d{3}-\d{3}-(\d{9}|[A-Z]{2}\d{7})$/; // Tres números, guion, tres números, guion, nueve números o dos letras + siete números
     if (!value) return null;
     if (!regex.test(value))
-      return "El formato del número de factura debe ser 001-002-123456789 o 001-002-op3456789.";
+      return "El formato del número de factura debe ser 123-456-7890123456789 o 123-456-AA1234567.";
     if (value.length !== 17)
-      return "El número de factura debe tener exactamente 17 caracteres.";
+      return "El número de factura debe tener 17 caracteres.";
     return null;
   },
 
@@ -70,7 +70,7 @@ export const validateFields = {
     const regex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/; // Permite letras (incluidas con tildes) y espacios
     if (!value) return null;
     if (!regex.test(value))
-      return "El nombre solo puede contener letras y tildes (á, é, í, ó, ú) y la letra 'ñ'.";
+      return "El nombre del técnico solo puede contener letras, tildes y espacios.";
     return null;
   },
 
@@ -97,7 +97,7 @@ export const validateFields = {
   installationCompleted: (value) => {
     const regex = /^[a-zA-Z0-9\s¿?()¡!ñÑáéíóúÁÉÍÓÚ´$+,.:-]*$/;
     if (value && !regex.test(value)) {
-      return "La descripción solo puede contener letras, números, y los siguientes caracteres: ¿ ? ( ) ¡ ! ñ Ñ á é í ó ú Á É Í Ó Ú ´ $ + , . : -";
+      return "La descripción solo puede contener letras, números, signos de puntuación y espacios.";
     }
     return null;
   },
@@ -105,7 +105,7 @@ export const validateFields = {
   photoUrl: (file) => {
     const maxSize = 1 * 1024 * 1024; // 1MB
     if (file && file.size > maxSize)
-      return "La imagen debe pesar menos de 1MB.";
+      return "La imagen no puede ser mayor a 1MB.";
     return null;
   },
 };
