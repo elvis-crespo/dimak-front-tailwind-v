@@ -8,9 +8,9 @@ import {
 import { useState } from "react";
 import axiosInstance from "../utils/axiosInstance";
 import { validateFields } from "../utils/validateFields.js";
-import Layout from "../components/Layout.jsx";
-import Icon from "../components/Icon.jsx";
 import { customSwal } from "../utils/swalConfig.js";
+import Layout from "../components/Layout.jsx";
+import Icon from "../components/Icons/Icon.jsx";
 
 export default function DeleteInstallation() {
   const [inputValue, setInputValue] = useState("");
@@ -160,7 +160,7 @@ export default function DeleteInstallation() {
 
         <div className="flex items-center justify-center md:col-span-2 mt-4">
           <FormButton
-            icon={<Icon name="icon-delete" className={"w-5 h-5 text-white"} />}
+            icon={<Icon name="icon-delete-form" className={"w-5 h-5 text-white"} />}
             text="Eliminar"
             loadingText="Eliminando..."
             color="red"

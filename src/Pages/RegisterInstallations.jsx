@@ -12,9 +12,9 @@ import axiosInstance from "../utils/axiosInstance";
 import { validateFields } from "../utils/validateFields.js";
 import ImageUploader from "../components/ImageUploader.jsx";
 import Layout from "../components/Layout.jsx";
-import Icon from "../components/Icon.jsx";
 import { useNavigate } from "react-router";
 import { customSwal } from "../utils/swalConfig.js";
+import Icon from "../components/Icons/Icon.jsx";
 
 export default function RegisterInstallations() {
   const { values, handleChange, resetForm } = useForm({
@@ -289,7 +289,7 @@ export default function RegisterInstallations() {
 
         <div className="flex items-center justify-between md:justify-end gap-6 mt-4">
           <FormButton
-            icon={<Icon name="icon-reset" className={"w-5 h-5 text-white"} />}
+            icon={<Icon name="icon-reset-form" className={"w-5 h-5 text-white"} />}
             text="Limpiar"
             color={"blue"}
             type={"reset"}
@@ -298,7 +298,7 @@ export default function RegisterInstallations() {
           />
 
           <FormButton
-            icon={<Icon name="icon-save" className={"w-5 h-5 text-white"} />}
+            icon={<Icon name="icon-save-form" className={"w-5 h-5 text-white"} />}
             text="Guardar"
             loadingText="Guardando..."
             type={"submit"}

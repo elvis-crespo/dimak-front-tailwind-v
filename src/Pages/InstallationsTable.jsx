@@ -7,7 +7,7 @@ import FormTitle from "../components/Form/FormTitle.jsx";
 import { CustomerTable } from "../components/CustomTable.jsx";
 import { customSwal } from "../utils/swalConfig.js";
 import FormButton from "../components/Form/FormButton.jsx";
-import Icon from "../components/Icon.jsx";
+import Icon from "../components/Icons/Icon.jsx";
 
 export default function InstallationsTable() {
   const columnsHeader = [
@@ -142,7 +142,7 @@ export default function InstallationsTable() {
               <FormButton
                 icon={
                   <Icon
-                    name="icon-delete-all"
+                    name="icon-search-form"
                     className={"w-6 h-6 text-white"}
                   />
                 }
@@ -156,7 +156,7 @@ export default function InstallationsTable() {
               <FormButton
                 icon={
                   <Icon
-                    name="icon-delete-all"
+                    name="icon-search-all-form"
                     className={"w-6 h-6 text-white"}
                   />
                 }

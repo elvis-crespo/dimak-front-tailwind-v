@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 import ThemeToggle from "./ThemeToggle";
 import { Logomin } from "../../public/Logomin";
+import { Logo } from "../../public/Logo";
 import Particles from "./Particles";
 
 export const Sidebar = ({ isAdmin = true }) => {
@@ -56,7 +57,7 @@ export const Sidebar = ({ isAdmin = true }) => {
     <>
       <Icon
         name="icon-menu"
-        className="z-10 w-6 h-6 absolute top-5 left-5 md:hidden"
+        className="z-10 w-7 h-7 absolute top-5 left-5 md:hidden"
         onClick={toggleSidebarVisibility}
       />
 
@@ -86,29 +87,25 @@ export const Sidebar = ({ isAdmin = true }) => {
               `}
               currentColor={theme === "dark" ? "#fff" : "#000"}
             />
-            <img
-              src={
-                theme === "dark"
-                  ? "/assets/images/logo-dark.svg"
-                  : "/assets/images/logo-light.svg"
-              }
-              alt="dimak-logo"
+            <Logo
+              theme={theme}
               className={`
                 w-36 h-auto absolute transition-all duration-300
                 ${
                   isSidebarVisible
-                    ? "opacity-100 scale-100"
-                    : "opacity-0 scale-0"
+                  ? "opacity-100 scale-100"
+                  : "opacity-0 scale-0"
                 }
                 xl:opacity-100 xl:scale-100
-              `}
+                `}
+              animate={false}
             />
           </div>
 
-          <nav className="flex flex-col gap-2 mt-6">
+          <nav className="flex flex-col mt-6">
             <SidebarItem
-              label="Home"
-              icon={<Icon name="icon-house" />}
+              label="Dashboard"
+              icon={<Icon name="icon-home-sb" className="w-6 h-6" />}
               isSidebarVisible={isSidebarVisible}
               active={location.pathname === "/home"}
               to="/home"
@@ -116,27 +113,50 @@ export const Sidebar = ({ isAdmin = true }) => {
             {isAdmin && (
               <>
                 <SidebarItem
-                  icon={<Icon name="icon-save" className="w-5 h-5" />}
-                  label="Register Cards"
+                  icon={<Icon name="icon-save-sb" className="w-6 h-6" />}
+                  label="Guardar"
                   isSidebarVisible={isSidebarVisible}
+                  active={
+                    location.pathname === "/register" ||
+                    location.pathname === "/register-vehicle" ||
+                    location.pathname === "/register-installation"
+                  }
                   to="/register"
                 />
+
                 <SidebarItem
-                  icon={<Icon name="icon-save" className="w-5 h-5" />}
-                  label="Search Cards"
+                  icon={<Icon name="icon-search-sb" className="w-6 h-6" />}
+                  label="Buscar"
                   isSidebarVisible={isSidebarVisible}
+                  active={
+                    location.pathname === "/search" ||
+                    location.pathname === "/search-plate" ||
+                    location.pathname === "/instllations-records"
+                  }
                   to="/search"
                 />
+
                 <SidebarItem
-                  icon={<Icon name="icon-reset" className="w-5 h-5" />}
-                  label="Update Cards"
+                  icon={<Icon name="icon-update-sb" className="w-6 h-6" />}
+                  label="Modificar"
                   isSidebarVisible={isSidebarVisible}
+                  active={
+                    location.pathname === "/update" ||
+                    location.pathname === "/update-vehicle" ||
+                    location.pathname === "/update-installation"
+                  }
                   to="/update"
                 />
+
                 <SidebarItem
-                  icon={<Icon name="icon-delete" className="w-5 h-5" />}
-                  label="Delete Cards"
+                  icon={<Icon name="icon-delete-sb" className="w-6 h-6" />}
+                  label="Eliminar"
                   isSidebarVisible={isSidebarVisible}
+                  active={
+                    location.pathname === "/delete" ||
+                    location.pathname === "/delete-vehicle" ||
+                    location.pathname === "/delete-installation"
+                  }
                   to="/delete"
                 />
               </>

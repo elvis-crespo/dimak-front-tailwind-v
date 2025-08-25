@@ -5,7 +5,7 @@ import axiosInstance from "../utils/axiosInstance.js";
 import { validateFields } from "../utils/validateFields.js";
 import { CustomerTable } from "../components/CustomTable.jsx";
 import { customSwal } from "../utils/swalConfig.js";
-import Icon from "../components/Icon.jsx";
+import Icon from "../components/Icons/Icon.jsx";
 
 export default function SearchPlate() {
   const columnsHeader = ["Placa", "Propietario", "Marca", "Modelo", "Año"];
@@ -121,7 +121,7 @@ export default function SearchPlate() {
               <FormButton
                 icon={
                   <Icon
-                    name="icon-delete-all"
+                    name="icon-search-form"
                     className={"w-6 h-6 text-white"}
                   />
                 }
@@ -135,7 +135,7 @@ export default function SearchPlate() {
               <FormButton
                 icon={
                   <Icon
-                    name="icon-delete-all"
+                    name="icon-search-all-form"
                     className={"w-6 h-6 text-white"}
                   />
                 }
@@ -150,7 +150,7 @@ export default function SearchPlate() {
                 }}
                 isLoading={isLoading}
                 // disabled={
-                  // !inputValue.trim() || inputValue.trim() === lastSearchedValue
+                // !inputValue.trim() || inputValue.trim() === lastSearchedValue
                 // }
               />
             </div>

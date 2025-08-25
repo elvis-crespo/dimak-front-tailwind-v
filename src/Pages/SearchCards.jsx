@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { Card } from "../components/Card";
 import Layout from "../components/Layout";
-import Icon from "../components/Icon";
+import Icon from "../components/Icons/Icon";
 
 export default function SearchCards() {
   return (
@@ -9,7 +9,7 @@ export default function SearchCards() {
       <Layout className="md:flex-row justify-start gap-8 md:justify-evenly">
         <NavLink to="/search-plate">
           <Card title={"Vehículo"} subtitle={"Consultar por placa"}>
-            <Icon name="icon-home" className="w-18 h-18 text-white" />
+            <Icon name="icon-search-card" className="w-18 h-18 text-white" />
           </Card>
         </NavLink>
         <NavLink to="/instllations-records">
@@ -17,7 +17,10 @@ export default function SearchCards() {
             title={"Instalación"}
             subtitle={"Consultar por número de factura"}
           >
-            <Icon name="icon-save" className="w-14 h-14 text-white" />
+            <Icon
+              name="icon-search-all-form"
+              className="w-16 h-16 text-white"
+            />
           </Card>
         </NavLink>
       </Layout>

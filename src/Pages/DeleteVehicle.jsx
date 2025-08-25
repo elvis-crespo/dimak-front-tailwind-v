@@ -9,8 +9,8 @@ import { useState } from "react";
 import axiosInstance from "../utils/axiosInstance";
 import { validateFields } from "../utils/validateFields";
 import Layout from "../components/Layout";
-import Icon from "../components/Icon";
 import { customSwal } from "../utils/swalConfig";
+import Icon from "../components/Icons/Icon";
 
 export default function DeleteVehicle() {
   const [inputValue, setInputValue] = useState("");
@@ -155,7 +155,7 @@ export default function DeleteVehicle() {
           <div className="flex items-center justify-center md:col-span-2 mt-4">
             <FormButton
               icon={
-                <Icon name="icon-delete-all" className={"w-6 h-6 text-white"} />
+                <Icon name="icon-delete-all-form" className={"w-6 h-6 text-white"} />
               }
               text="Eliminar"
               loadingText="Eliminando..."

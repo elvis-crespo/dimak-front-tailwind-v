@@ -6,13 +6,13 @@ import {
   FormField,
   FormButton,
 } from "../components/Form";
-import Swal from "sweetalert2";
 import { useState } from "react";
 import axiosInstance from "../utils/axiosInstance";
 import { validateFields } from "../utils/validateFields.js";
 import ImageUploader from "../components/ImageUploader.jsx";
 import Layout from "../components/Layout.jsx";
-import Icon from "../components/Icon.jsx";
+import Icon from "../components/Icons/Icon.jsx";
+import { customSwal } from "../utils/swalConfig.js";
 
 export default function UpdateInstallations() {
   const { values, handleChange, resetForm, setValues } = useForm({
@@ -36,7 +36,7 @@ export default function UpdateInstallations() {
       values.technicalFileNumber.trim()
     );
     if (validationError) {
-      Swal.fire({
+      customSwal.fire({
         icon: "error",
         title: "Error de Validación",
         text: validationError,
@@ -75,7 +75,7 @@ export default function UpdateInstallations() {
         setImage(installationData.photoUrl);
         setIsEditing(true);
       } else {
-        Swal.fire({
+        customSwal.fire({
           title: "Error",
           text:
             response.data.message ||
@@ -84,7 +84,7 @@ export default function UpdateInstallations() {
         });
       }
     } catch (error) {
-      Swal.fire({
+      customSwal.fire({
         title: "Error",
         text: `${
           error.response.data.message ||
@@ -96,7 +96,7 @@ export default function UpdateInstallations() {
   };
 
   const hasChanges = () => {
-    if (!initialValues) return false; // Si no hay datos iniciales, no se puede comparar
+    if (!initialValues) return false; // Si no hay valores iniciales, no hay cambios
     return (
       values.plate !== initialValues.plateId ||
       values.technicalFileNumber !== initialValues.technicalFileNumber ||
@@ -125,7 +125,7 @@ export default function UpdateInstallations() {
     }
 
     if (!hasChanges()) {
-      Swal.fire({
+      customSwal.fire({
         title: "No hay cambios",
         text: "No se han realizado cambios en los datos de la instalación.",
         icon: "info",
@@ -142,8 +142,9 @@ export default function UpdateInstallations() {
       formData.append("photoUrl", values.photoUrl);
     }
 
-    Swal.fire({
-      title: "¿Deseas Guardar esta Instalación?",
+    customSwal.fire({
+      title: "¿Deseas modificar esta Instalación?",
+      icon: "question",
       showDenyButton: true,
       showCancelButton: true,
       confirmButtonText: "Guardar",
@@ -154,7 +155,7 @@ export default function UpdateInstallations() {
         const response = await HandleFetch(formData);
 
         if (response.isSuccess === true) {
-          Swal.fire({
+          customSwal.fire({
             title: "¡Guardado!",
             text: `${response.message}`, // Mensaje de éxito
             icon: "success",
@@ -163,7 +164,7 @@ export default function UpdateInstallations() {
           setIsEditing(false);
         }
       } else if (result.isDenied) {
-        Swal.fire("Cambios no guardados", "", "info");
+        customSwal.fire("Cambios no guardados", "", "info");
       }
     });
   };
@@ -181,19 +182,19 @@ export default function UpdateInstallations() {
       return response.data;
     } catch (error) {
       if (error.message === "Network Error" || error.code === "ECONNREFUSED") {
-        Swal.fire({
+        customSwal.fire({
           icon: "error",
           title: "Oops...",
           text: "¡Hubo un problema al conectar con el servidor! Verifica si el servidor está en ejecución.",
         });
       } else if (!error.response) {
-        Swal.fire({
+        customSwal.fire({
           icon: "error",
           title: "Error",
           text: "Hubo un problema desconocido con el servidor.",
         });
       } else {
-        Swal.fire({
+        customSwal.fire({
           icon: "error",
           title: "Error",
           text: `Error al guardar la instalación: ${
@@ -234,9 +235,7 @@ export default function UpdateInstallations() {
 
   return (
     <Layout>
-      <FormContainer
-        onSubmit={handleFormSubmit}
-      >
+      <FormContainer onSubmit={handleFormSubmit}>
         <FormTitle>Actualizar Información de Instalación</FormTitle>
         <FormSubtitle>Detalles de la Instalación</FormSubtitle>
 
@@ -253,7 +252,7 @@ export default function UpdateInstallations() {
 
           <FormButton
             icon={
-              <Icon name="icon-delete-all" className={"w-6 h-6 text-white"} />
+              <Icon name="icon-search-form" className={"w-6 h-6 text-white"} />
             }
             text="Buscar"
             type="submit"
@@ -363,11 +362,16 @@ export default function UpdateInstallations() {
             <div className="flex items-center justify-center md:justify-end md:col-span-2 mt-4">
               <FormButton
                 icon={
-                  <Icon name="icon-reset" className={"w-5 h-5 text-white"} />
+                  <Icon
+                    name="icon-update-form"
+                    className={"w-6 h-6 text-white"}
+                  />
                 }
                 text="Actualizar"
                 type="submit"
                 color="blue"
+                loadingText="Actualizando..."
+                // disabled={!hasChanges()}
               />
             </div>
           </>

@@ -30,7 +30,7 @@ const DeleteCards = React.lazy(() => import("./Pages/DeleteCards"));
 const DeleteVehicle = React.lazy(() => import("./Pages/DeleteVehicle"));
 const DeleteInstallation = React.lazy(() => import("./Pages/DeleteInstallation"));
 
-// const Login = React.lazy(() => import("./Pages/Login"));
+const Login = React.lazy(() => import("./Pages/Login"));
 // const NotFound = React.lazy(() => import("./Pages/NotFound"));
 const Home = React.lazy(() => import("./Pages/Home"));
 
@@ -87,7 +87,10 @@ function App() {
             />
             <Route path="/search" element={<SearchCards />} />
             <Route path="/search-plate" element={<SearchPlate />} />
-            <Route path="/instllations-records" element={<InstallationsTable />} />
+            <Route
+              path="/instllations-records"
+              element={<InstallationsTable />}
+            />
 
             <Route path="/delete" element={<DeleteCards />} />
             <Route path="/delete-vehicle" element={<DeleteVehicle />} />
@@ -101,18 +104,7 @@ function App() {
               path="/update-installation"
               element={<UpdateInstallation />}
             />
-            <Route
-              path="/"
-              element={
-                <>
-                  <Layout>
-                    <h1 className="text-3xl text-amber-800 dark:text-amber-50">
-                      Ruta principal
-                    </h1>
-                  </Layout>
-                </>
-              }
-            />
+            <Route path="/" element={<Login />} />
           </Route>
         </Routes>
       </Suspense>

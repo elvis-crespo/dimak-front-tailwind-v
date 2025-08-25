@@ -10,8 +10,8 @@ import axiosInstance from "../utils/axiosInstance";
 import { useState } from "react";
 import { validateFields } from "../utils/validateFields";
 import Layout from "../components/Layout";
-import Icon from "../components/Icon";
 import { customSwal } from "../utils/swalConfig";
+import Icon from "../components/Icons/Icon";
 
 export default function UpdateVehicle() {
   const { values, handleChange, resetForm, setValues } = useForm({
@@ -86,7 +86,6 @@ export default function UpdateVehicle() {
     }
   };
 
-  // Función para verificar si hay cambios
   const hasChanges = () => {
     if (!initialValues) return false; // Si no hay valores iniciales, no hay cambios
     return (
@@ -116,7 +115,8 @@ export default function UpdateVehicle() {
     }
 
     customSwal.fire({
-      title: "¿Quieres guardar los cambios?",
+      title: "¿Deseas guardar los cambios?",
+      icon: "question",
       showDenyButton: true,
       showCancelButton: true,
       confirmButtonText: "Guardar",
@@ -203,7 +203,7 @@ export default function UpdateVehicle() {
 
           <FormButton
             icon={
-              <Icon name="icon-delete-all" className={"w-6 h-6 text-white"} />
+              <Icon name="icon-search-form" className={"w-6 h-6 text-white"} />
             }
             text="Buscar"
             loadingText="Buscando..."
@@ -282,14 +282,14 @@ export default function UpdateVehicle() {
             <div className="flex items-center justify-center md:justify-end md:col-span-2 mt-4">
               <FormButton
                 icon={
-                  <Icon name="icon-reset" className={"w-5 h-5 text-white"} />
+                  <Icon name="icon-update-form" className={"w-6 h-6 text-white"} />
                 }
                 text="Actualizar"
                 loadingText="Actualizando..."
                 type="submit"
                 color="blue"
                 isLoading={isLoading}
-                disabled={!hasChanges()}
+                // disabled={!hasChanges()}
               />
             </div>
           </>
