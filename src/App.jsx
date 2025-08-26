@@ -3,16 +3,16 @@ import "./App.css";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import React, { Suspense, useState } from "react";
+import { useSelector } from "react-redux";
+import { useAuth } from "./Hooks/useAuth";
 import { Sidebar } from "./components/SideBar";
-import Layout from "./components/Layout";
-// import { useSelector } from "react-redux";
-// import { useAuth } from "./Hooks/useAuth";
-// import DropdownMenu from "./components/DropdownMenu";
-// import { BackgroundEffect } from "./components/BackgroundEffect";
+import DropdownMenu from "./components/DropdownMenu";
 
 const RegisterCards = React.lazy(() => import("./Pages/RegisterCards"));
 const RegisterVehicle = React.lazy(() => import("./Pages/RegisterVehicle"));
-const ResgisterIntallations = React.lazy(() => import("./Pages/RegisterInstallations"));
+const ResgisterIntallations = React.lazy(() =>
+  import("./Pages/RegisterInstallations")
+);
 
 const UpdateCards = React.lazy(() => import("./Pages/UpdateCards"));
 const UpdateVehicle = React.lazy(() => import("./Pages/UpdateVehicle"));
@@ -28,21 +28,21 @@ const InstallationsTable = React.lazy(() =>
 
 const DeleteCards = React.lazy(() => import("./Pages/DeleteCards"));
 const DeleteVehicle = React.lazy(() => import("./Pages/DeleteVehicle"));
-const DeleteInstallation = React.lazy(() => import("./Pages/DeleteInstallation"));
+const DeleteInstallation = React.lazy(() =>
+  import("./Pages/DeleteInstallation")
+);
 
 const Login = React.lazy(() => import("./Pages/Login"));
-// const NotFound = React.lazy(() => import("./Pages/NotFound"));
+const NotFound = React.lazy(() => import("./Pages/NotFound"));
 const Home = React.lazy(() => import("./Pages/Home"));
 
 function App() {
-  // const { isLoggedIn } = useAuth();
+  const { isLoggedIn } = useAuth();
 
-  // const { user } = useSelector((state) => state.user);
-  // const isAdmin =
-  //   user?.["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] ===
-  //   "Admin";
-  const isAdmin = true;
-  const isLoggedIn = true;
+  const { user } = useSelector((state) => state.user);
+  const isAdmin =
+    user?.["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] ===
+    "Admin";
 
   return (
     <BrowserRouter
@@ -52,13 +52,12 @@ function App() {
         v7_relativeSplatPath: true,
       }}
     >
-      {/* {isLoggedIn && (
-          <>
-            <Sidebar isAdmin={isAdmin}></Sidebar>
-            <DropdownMenu />
-          </>
-        )} */}
-      <Sidebar isAdmin={isAdmin}></Sidebar>
+      {isLoggedIn && (
+        <>
+          <Sidebar isAdmin={isAdmin}></Sidebar>
+          <DropdownMenu />
+        </>
+      )}
       <Suspense
         fallback={
           <div
@@ -73,11 +72,14 @@ function App() {
         }
       >
         <Routes>
-          <Route
-            element={
-              <ProtectedRoute isAllowed={isLoggedIn} isAdmin={isAdmin} />
-            }
-          >
+          <Route path="*" element={<NotFound />} />
+          {isLoggedIn ? (
+            <Route path="/" element={<Navigate to="/home" />} />
+          ) : (
+            <Route path="/" element={<Login />} />
+          )}
+
+          <Route element={<ProtectedRoute isAllowed={isLoggedIn} />}>
             <Route path="/home" element={<Home />} />
             <Route path="/register" element={<RegisterCards />} />
             <Route path="/register-vehicle" element={<RegisterVehicle />} />
@@ -91,7 +93,9 @@ function App() {
               path="/instllations-records"
               element={<InstallationsTable />}
             />
+          </Route>
 
+          <Route element={<ProtectedRoute isAllowed={isLoggedIn && isAdmin} />}>
             <Route path="/delete" element={<DeleteCards />} />
             <Route path="/delete-vehicle" element={<DeleteVehicle />} />
             <Route
@@ -104,7 +108,6 @@ function App() {
               path="/update-installation"
               element={<UpdateInstallation />}
             />
-            <Route path="/" element={<Login />} />
           </Route>
         </Routes>
       </Suspense>

@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import {  useSelector } from "react-redux";
+import {  useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
+import { logoutUser } from "../redux/userReducer";
 
 const DropdownMenu = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useSelector((state) => state.user);
   // const { user, isLoggedIn } = useSelector((state) => state.user);
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const menuRef = useRef(null);
   const toggleButtonRef = useRef(null);
 
@@ -14,7 +15,7 @@ const DropdownMenu = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // dispatch(logoutUser());
+    dispatch(logoutUser());
     navigate("/");
     setIsOpen(false);
   };
@@ -47,7 +48,7 @@ const DropdownMenu = () => {
       <button
         onClick={toggleMenu}
         ref={toggleButtonRef}
-        className="absolute top-4 right-4 w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-800 text-gray-500 dark:text-white border-0 cursor-pointer text-lg flex items-center justify-center shadow hover:bg-gray-300 dark:hover:bg-gray-600"
+        className="z-10 absolute top-4 right-4 w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-800 text-gray-500 dark:text-white border-0 cursor-pointer text-lg flex items-center justify-center shadow hover:bg-gray-300 dark:hover:bg-gray-600"
       >
         {letter}
       </button>
@@ -183,18 +184,6 @@ const DropdownMenu = () => {
               <span className="font-medium text-gray-700 group-hover:text-red-600">
                 Cerrar Sesion
               </span>
-              <svg
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                className="h-3 w-3 text-gray-400 ml-auto group-hover:text-red-500"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  clipRule="evenodd"
-                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                  fillRule="evenodd"
-                ></path>
-              </svg>
             </a>
           </div>
         </div>

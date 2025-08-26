@@ -3,7 +3,7 @@ const Icon = ({ name, className, onClick }) => {
   return (
     <svg
       onClick={onClick}
-      className={`fill-current text-black dark:text-white ${className}`}
+      className={`fill-current text-black dark:text-white cursor-pointer ${className}`}
       width="24"
       height="24"
     >

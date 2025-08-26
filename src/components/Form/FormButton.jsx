@@ -2,6 +2,7 @@
 const FormButton = ({
   icon,
   text,
+  title,
   loadingText = "Procesando...",
   color = "teal",
   type,
@@ -37,6 +38,7 @@ const FormButton = ({
 
   return (
     <button
+      title={title}
       className={`flex w-32 h-[42px] rounded-md overflow-hidden shadow-md group ${className} ${
         disabled ? "cursor-not-allowed opacity-70" : "cursor-pointer"
       } ${isLoading ? "w-36 opacity-70 cursor-not-allowed" : ""}`}

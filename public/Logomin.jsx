@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 /* eslint-disable react/prop-types */
 export const Logomin = ({ currentColor, className }) => {
   return (
-    <Link to="/">
+    <Link to="/home">
       <svg
         width="50"
         height="50"

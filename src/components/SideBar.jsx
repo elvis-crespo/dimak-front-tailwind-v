@@ -11,7 +11,7 @@ import { Logomin } from "../../public/Logomin";
 import { Logo } from "../../public/Logo";
 import Particles from "./Particles";
 
-export const Sidebar = ({ isAdmin = true }) => {
+export const Sidebar = ({ isAdmin }) => {
   const theme = useSelector((state) => state.theme.theme);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const sidebarRef = useRef(null);
@@ -93,8 +93,8 @@ export const Sidebar = ({ isAdmin = true }) => {
                 w-36 h-auto absolute transition-all duration-300
                 ${
                   isSidebarVisible
-                  ? "opacity-100 scale-100"
-                  : "opacity-0 scale-0"
+                    ? "opacity-100 scale-100"
+                    : "opacity-0 scale-0"
                 }
                 xl:opacity-100 xl:scale-100
                 `}
@@ -105,62 +105,66 @@ export const Sidebar = ({ isAdmin = true }) => {
           <nav className="flex flex-col mt-6">
             <SidebarItem
               label="Dashboard"
+              title="Dashboard"
               icon={<Icon name="icon-home-sb" className="w-6 h-6" />}
               isSidebarVisible={isSidebarVisible}
               active={location.pathname === "/home"}
               to="/home"
             />
-            {isAdmin && (
+            <SidebarItem
+              label="Guardar"
+              title="New register"
+              icon={<Icon name="icon-save-sb" className="w-6 h-6" />}
+              isSidebarVisible={isSidebarVisible}
+              active={
+                location.pathname === "/register" ||
+                location.pathname === "/register-vehicle" ||
+                location.pathname === "/register-installation"
+              }
+              to="/register"
+            />
+
+            <SidebarItem
+              label="Buscar"
+              title="Search"
+              icon={<Icon name="icon-search-sb" className="w-6 h-6" />}
+              isSidebarVisible={isSidebarVisible}
+              active={
+                location.pathname === "/search" ||
+                location.pathname === "/search-plate" ||
+                location.pathname === "/instllations-records"
+              }
+              to="/search"
+            />
+            <SidebarItem
+              label="Modificar"
+              title="Update"
+              icon={<Icon name="icon-update-sb" className="w-6 h-6" />}
+              isSidebarVisible={isSidebarVisible}
+              active={
+                location.pathname === "/update" ||
+                location.pathname === "/update-vehicle" ||
+                location.pathname === "/update-installation"
+              }
+              to="/update"
+            />
+            <SidebarItem
+              label="Eliminar"
+              title="Delete"
+              icon={<Icon name="icon-delete-sb" className="w-6 h-6" />}
+              isSidebarVisible={isSidebarVisible}
+              active={
+                location.pathname === "/delete" ||
+                location.pathname === "/delete-vehicle" ||
+                location.pathname === "/delete-installation"
+              }
+              to="/delete"
+            />
+            {/* {isAdmin && (
               <>
-                <SidebarItem
-                  icon={<Icon name="icon-save-sb" className="w-6 h-6" />}
-                  label="Guardar"
-                  isSidebarVisible={isSidebarVisible}
-                  active={
-                    location.pathname === "/register" ||
-                    location.pathname === "/register-vehicle" ||
-                    location.pathname === "/register-installation"
-                  }
-                  to="/register"
-                />
 
-                <SidebarItem
-                  icon={<Icon name="icon-search-sb" className="w-6 h-6" />}
-                  label="Buscar"
-                  isSidebarVisible={isSidebarVisible}
-                  active={
-                    location.pathname === "/search" ||
-                    location.pathname === "/search-plate" ||
-                    location.pathname === "/instllations-records"
-                  }
-                  to="/search"
-                />
-
-                <SidebarItem
-                  icon={<Icon name="icon-update-sb" className="w-6 h-6" />}
-                  label="Modificar"
-                  isSidebarVisible={isSidebarVisible}
-                  active={
-                    location.pathname === "/update" ||
-                    location.pathname === "/update-vehicle" ||
-                    location.pathname === "/update-installation"
-                  }
-                  to="/update"
-                />
-
-                <SidebarItem
-                  icon={<Icon name="icon-delete-sb" className="w-6 h-6" />}
-                  label="Eliminar"
-                  isSidebarVisible={isSidebarVisible}
-                  active={
-                    location.pathname === "/delete" ||
-                    location.pathname === "/delete-vehicle" ||
-                    location.pathname === "/delete-installation"
-                  }
-                  to="/delete"
-                />
               </>
-            )}
+            )} */}
           </nav>
         </div>
 

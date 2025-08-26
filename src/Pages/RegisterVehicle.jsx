@@ -15,6 +15,7 @@ import { useNavigate } from "react-router";
 import ImageUploader from "../components/ImageUploader.jsx";
 import { customSwal } from "../utils/swalConfig.js";
 import Icon from "../components/Icons/Icon.jsx";
+import { NavigationIcon } from "../components/Icons/NavigationIcon.jsx";
 
 export default function RegisterVehicle() {
   const [errors, setErrors] = useState({});
@@ -374,31 +375,24 @@ export default function RegisterVehicle() {
             />
           </FormField>
 
-          <div className="hidden md:flex justify-start  items-center mt-4">
-            <button
-              type="button"
-              onClick={() => navigate("/")}
-              className="hidden gap-2 items-center md:flex relative cursor-pointer px-6 py-2 h-[42px] text-center font-barlow justify-center text-base text-white rounded-lg border-solid transition-transform duration-300 ease-in-out group outline-offset-4 focus:outline focus:outline-white focus:outline-offset-4 overflow-hidden"
-            >
-              <Icon name="icon-home" className={"mr-2"} />
-
-              <span className="relative z-20">Ir al Inicio</span>
-
-              {/* Brillo */}
-              <span className="absolute left-[-75%] top-0 h-full w-[50%] bg-white/20 rotate-12 z-10 blur-lg group-hover:left-[125%] transition-all duration-1000 ease-in-out"></span>
-
-              {/* Bordes */}
-              <span className="w-1/2 drop-shadow-3xl transition-all duration-300 block border-[#D4EDF9] absolute h-[20%] rounded-tl-lg border-l-2 border-t-2 top-0 left-0"></span>
-              <span className="w-1/2 drop-shadow-3xl transition-all duration-300 block border-[#D4EDF9] absolute group-hover:h-[90%] h-[60%] rounded-tr-lg border-r-2 border-t-2 top-0 right-0"></span>
-              <span className="w-1/2 drop-shadow-3xl transition-all duration-300 block border-[#D4EDF9] absolute h-[60%] group-hover:h-[90%] rounded-bl-lg border-l-2 border-b-2 left-0 bottom-0"></span>
-              <span className="w-1/2 drop-shadow-3xl transition-all duration-300 block border-[#D4EDF9] absolute h-[20%] rounded-br-lg border-r-2 border-b-2 right-0 bottom-0"></span>
-            </button>
+          <div className="hidden md:flex justify-start  items-center mt-4 text-white dark:text-black">
+            <NavigationIcon
+              icon={<Icon name="icon-back" className={"w-6 h-6"} />}
+              text="Volver"
+              title="Volver"
+              color="blue"
+              onClick={() => navigate(-1)}
+            />
           </div>
 
           <div className="flex items-center justify-between md:justify-end gap-6 mt-4">
             <FormButton
-              icon={<Icon name="icon-reset-form" className={"w-5 h-5 text-white"} />}
+              icon={
+                <Icon name="icon-reset-form" className={"w-5 h-5 text-white"} />
+              }
               text="Limpiar"
+              title="Limpiar Formulario"
+              loadingText="Limpiando..."
               color="blue"
               type="reset"
               onClick={resetFormAndFile}
@@ -406,8 +400,11 @@ export default function RegisterVehicle() {
             />
 
             <FormButton
-              icon={<Icon name="icon-save-form" className={"w-5 h-5 text-white"} />}
+              icon={
+                <Icon name="icon-save-form" className={"w-5 h-5 text-white"} />
+              }
               text="Guardar"
+              title="Guardar Formulario"
               loadingText="Guardando..."
               type="submit"
               color="teal"

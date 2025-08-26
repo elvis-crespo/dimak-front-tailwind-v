@@ -81,10 +81,13 @@ export const userSlice = createSlice({
         state.isLoading = false;
         state.user = null;
         state.isLoggedIn = false;
-        if (action.error.message === "Request failed with status code 401")
-          state.error = "Incorrect credentials! Wrong Password.";
-        else if (action.error.message === "Request failed with status code 404")
-          state.error = "Incorrect credentials! User not found.";
+        if (
+          action.error.message === "Request failed with status code 401" ||
+          action.error.message === "Request failed with status code 404"
+        )
+          state.error = "Incorrect credentials! Invalid username or password";
+        else if (action.error.message === "Request failed with status code 400")
+          state.error = "Username or password cannot be empty.";
         else state.error = "Unknown error. Please try again later.";
       })
       .addCase(logoutUser.fulfilled, (state) => {
