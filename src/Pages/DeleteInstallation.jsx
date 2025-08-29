@@ -15,77 +15,72 @@ import Icon from "../components/Icons/Icon.jsx";
 export default function DeleteInstallation() {
   const [inputValue, setInputValue] = useState("");
   const [lastSearchedValue, setLastSearchedValue] = useState("");
-  const [deleteType, setDeleteType] = useState("invoice"); 
+  const [deleteType, setDeleteType] = useState("invoice");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
     if (!inputValue.trim()) {
-          return customSwal.fire({
-            icon: "warning",
-            title: "Campo vacío",
-            text: "Por favor, ingrese un valor en el campo de búsqueda.",
-          });
-        }
-    
-        if (inputValue.trim() === lastSearchedValue) {
-          return customSwal.fire({
-            icon: "info",
-            title: "Sin cambios",
-            text: "Ya has buscado esta instalación.",
-          });
-        }
+      return customSwal.fire({
+        icon: "warning",
+        title: "Campo vacío",
+        text: "Por favor, ingrese un valor en el campo de búsqueda.",
+      });
+    }
 
     const validationError =
-    deleteType === "invoice"
-      ? validateFields.invoiceNumber(inputValue.trim()) 
-      : validateFields.technicalFileNumber(inputValue.trim()); 
-  
-  if (validationError) {
-    customSwal.fire({
-      icon: "error",
-      title: "Error de Validación",
-      text: validationError,
-    });
-    return;
-  }
-  
-    customSwal.fire({
-      title: `¿Estás seguro?`,
-      html: `¡No podrás revertir esta acción!<br />Se eliminará la instalación con ${
-        deleteType === "invoice" ? "número de factura" : "expediente técnico"
-      } <b>${inputValue}</b>.`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Sí, eliminar",
-      cancelButtonText: "Cancelar",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        const response = await handleFetch();
+      deleteType === "invoice"
+        ? validateFields.invoiceNumber(inputValue.trim())
+        : validateFields.technicalFileNumber(inputValue.trim());
 
-        setLastSearchedValue(inputValue.trim());
+    if (validationError) {
+      customSwal.fire({
+        icon: "error",
+        title: "Error de Validación",
+        text: validationError,
+      });
+      return;
+    }
 
-        if (response.isSuccess) {
-          customSwal.fire({
-            title: "¡Eliminado!",
-            text: `Registro con ${
-              deleteType === "invoice" ? "factura" : "expediente"
-            } ${inputValue} ha sido eliminado.`,
-            icon: "success",
-          });
-          setInputValue("");
-        } else {
-          customSwal.fire({
-            title: "Error",
-            text: response.message || "Hubo un problema al eliminar el registro.",
-            icon: "error",
-          });
+    customSwal
+      .fire({
+        title: `¿Estás seguro?`,
+        html: `¡No podrás revertir esta acción!<br />Se eliminará la instalación con ${
+          deleteType === "invoice" ? "número de factura" : "expediente técnico"
+        } <b>${inputValue}</b>.`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar",
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          const response = await handleFetch();
+
+          setLastSearchedValue(inputValue.trim());
+
+          if (response.isSuccess) {
+            customSwal.fire({
+              title: "¡Eliminado!",
+              text: `Registro con ${
+                deleteType === "invoice" ? "factura" : "expediente"
+              } ${inputValue} ha sido eliminado.`,
+              icon: "success",
+            });
+            setInputValue("");
+          } else {
+            customSwal.fire({
+              title: "Error",
+              text:
+                response.message || "Hubo un problema al eliminar el registro.",
+              icon: "error",
+            });
+          }
         }
-      }
-    });
+      });
   };
 
   const handleFetch = async () => {
@@ -104,7 +99,9 @@ export default function DeleteInstallation() {
       customSwal.fire({
         icon: "error",
         title: "Error",
-        text: `Error al eliminar: ${error.response?.data?.message || error.message}`,
+        text: `Error al eliminar: ${
+          error.response?.data?.message || error.message
+        }`,
       });
       return error.response?.data || { isSuccess: false };
     } finally {
@@ -131,13 +128,9 @@ export default function DeleteInstallation() {
             value={deleteType}
             onChange={(e) => setDeleteType(e.target.value)}
             className="px-4 py-2 text-base border border-gray-300 rounded-lg bg-[rgb(248,249,252)] dark:bg-[rgb(176,176,176)] dark:border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-gray-600 dark:focus:border-gray-500 outline-none"
-            >
-            <option value="invoice" >
-              Número de Factura
-            </option>
-            <option value="technicalFile" >
-              Expediente Técnico
-            </option>
+          >
+            <option value="invoice">Número de Factura</option>
+            <option value="technicalFile">Expediente Técnico</option>
           </select>
         </FormField>
 
@@ -154,19 +147,22 @@ export default function DeleteInstallation() {
           }
           required
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
+          onChange={(e) => setInputValue(e.target.value.toUpperCase().trim())}
           className="md:col-span-2"
         ></FormField>
 
         <div className="flex items-center justify-center md:col-span-2 mt-4">
           <FormButton
-            icon={<Icon name="icon-delete-form" className={"w-5 h-5 text-white"} />}
+            icon={
+              <Icon name="icon-delete-form" className={"w-5 h-5 text-white"} />
+            }
             text="Eliminar"
+            title="Eliminar Instalación"
             loadingText="Eliminando..."
             color="red"
             type="submit"
             disabled={
-              !inputValue.trim() || inputValue.trim() === lastSearchedValue
+              !!inputValue.trim() && inputValue.trim() === lastSearchedValue
             }
             isLoading={isLoading}
           />
@@ -175,4 +171,3 @@ export default function DeleteInstallation() {
     </Layout>
   );
 }
-

@@ -71,16 +71,18 @@ export default function InstallationsRecordsPopup({ plate }) {
             columnsHeader={columnsHeader}
             columnKeys={columnKeys}
           />
-
-          {/* Contenedor de Paginación */}
-          <div className="flex flex-wrap items-center justify-between mt-6 w-full gap-4">
-            {/* Selector de registros */}
-            <div className="flex items-center gap-2 text-sm">
-              <span>Registros por página:</span>
+          <div className="flex flex-col md:flex-row items-center justify-center md:justify-between w-full gap-4 mt-6 flex-wrap">
+            <div className="flex items-center justify-center gap-2 text-sm md:text-base w-full md:w-auto">
+              {/* <span>Registros por página:</span> */}
+              <label htmlFor="pageSize">
+                Registros por página
+              </label>
               <select
-                className="px-3 py-2 border rounded-lg cursor-pointer text-sm"
+                id="pageSize"
+                name="pageSize"
                 value={pageSize}
                 onChange={handlePageSizeChange}
+                className="px-3 py-2 md:px-4 md:py-2 border rounded-lg cursor-pointer text-sm md:text-base"
               >
                 <option value={5}>5</option>
                 <option value={10}>10</option>
@@ -89,43 +91,45 @@ export default function InstallationsRecordsPopup({ plate }) {
               </select>
             </div>
 
-            {/* Botones de paginación */}
-            <div className="flex items-center justify-center gap-2 mr-5">
+            {/* pagination */}
+            <div className="flex items-center justify-center gap-2 w-full md:w-auto">
               <button
-                className={`px-4 py-2 rounded-lg font-bold text-white transition transform 
-                ${
-                  page === 1
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-blue-600 hover:bg-blue-700 hover:scale-105"
-                }`}
                 disabled={page === 1}
                 onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+                className={`px-3 md:px-4 py-2 rounded-lg font-bold transition transform
+                ${
+                  page === 1
+                    ? "bg-gray-400 cursor-not-allowed text-white"
+                    : "bg-blue-600 hover:bg-blue-700 hover:scale-105 text-white"
+                } text-sm md:text-base`}
               >
                 Anterior
               </button>
 
-              <span className="mx-2 text-base font-semibold text-gray-700">
+              {/* pages */}
+              <span className="mx-2 font-semibold text-gray-700 text-sm md:text-base whitespace-nowrap">
                 Página {page} de {totalPages}
               </span>
 
               <button
-                className={`px-4 py-2 rounded-lg font-bold text-white transition transform 
+                disabled={page === totalPages}
+                onClick={() =>
+                  setPage((prev) => Math.min(prev + 1, totalPages))
+                }
+                className={`px-3 md:px-4 py-2 rounded-lg font-bold transition transform
                 ${
                   page === totalPages
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-blue-600 hover:bg-blue-700 hover:scale-105"
-                }`}
-                disabled={page === totalPages}
-                onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+                    ? "bg-gray-400 cursor-not-allowed text-white"
+                    : "bg-blue-600 hover:bg-blue-700 hover:scale-105 text-white"
+                } text-sm md:text-base`}
               >
                 Siguiente
               </button>
             </div>
 
-            {/* Botón ordenar */}
             <button
               onClick={() => setSortDir(sortDir === "asc" ? "desc" : "asc")}
-              className="px-4 py-2 rounded-lg font-bold text-white bg-green-600 hover:bg-green-700 transition transform hover:scale-105 text-sm"
+              className="px-3 md:px-4 py-2 rounded-lg font-bold bg-green-600 hover:bg-green-700 text-white transition transform hover:scale-105 text-sm md:text-base w-auto mt-2 md:mt-0"
             >
               Orden: {sortDir === "asc" ? "Ascendente" : "Descendente"}
             </button>

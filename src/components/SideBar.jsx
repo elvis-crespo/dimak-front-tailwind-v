@@ -1,35 +1,24 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { useEffect, useRef, useState } from "react";
 import Icon from "./Icons/Icon";
 import SidebarItem from "./SidebarItem";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router";
-import { useDispatch } from "react-redux";
 import ThemeToggle from "./ThemeToggle";
 import { Logomin } from "../../public/Logomin";
 import { Logo } from "../../public/Logo";
 import Particles from "./Particles";
 
-export const Sidebar = ({ isAdmin }) => {
+export const Sidebar = () => {
   const theme = useSelector((state) => state.theme.theme);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const sidebarRef = useRef(null);
   const toggleButtonRef = useRef(null);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const toggleSidebar = (e) => {
-    setIsSidebarVisible(false);
-    e.preventDefault();
-  };
-  const toggleSidebarVisibility = () => {
-    setIsSidebarVisible((prev) => !prev);
-  };
-  const handleLogout = () => {
-    setIsSidebarVisible(false);
-  };
+  const toggleSidebarVisibility = () => setIsSidebarVisible((prev) => !prev);
+
   const handleClickOutside = (e) => {
     if (
       sidebarRef.current &&
@@ -43,15 +32,51 @@ export const Sidebar = ({ isAdmin }) => {
 
   const handleMenuItemClick = (path) => {
     navigate(path);
+    setIsSidebarVisible(false); // close the sidebar after navigation
   };
 
   useEffect(() => {
-    setIsSidebarVisible(false);
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // sidebar items
+  const sidebarItems = [
+    {
+      label: "Dashboard",
+      title: "Dashboard",
+      icon: "icon-home-sb",
+      path: "/home",
+    },
+    {
+      label: "Guardar",
+      title: "New register",
+      icon: "icon-save-sb",
+      path: "/register",
+    },
+    {
+      label: "Buscar",
+      title: "Search register",
+      icon: "icon-search-sb",
+      path: "/search",
+    },
+    {
+      label: "Modificar",
+      title: "Update register",
+      icon: "icon-update-sb",
+      path: "/update",
+    },
+    {
+      label: "Eliminar",
+      title: "Delete register",
+      icon: "icon-delete-sb",
+      path: "/delete",
+    },
+  ];
+
+  // if (isAdmin) {
+  //   sidebarItems.push({ label: "Eres un puto admin?", icon: "icon-user", path: "/admin" });
+  // }
 
   return (
     <>
@@ -72,99 +97,34 @@ export const Sidebar = ({ isAdmin }) => {
           xl:w-64
         `}
       >
-        <Particles enableMouseInteraction={true} />
+        <Particles />
         <div className="z-10">
           <div className="flex items-center justify-center h-16 rounded-xl mb-8 relative">
             <Logomin
-              className={`
-                w-10 h-10 transition-all duration-300
-                ${
-                  isSidebarVisible
-                    ? "opacity-0 scale-0"
-                    : "opacity-100 scale-100"
-                }
-                xl:opacity-0 xl:scale-0
-              `}
+              className={`w-10 h-10 transition-all duration-300 ${isSidebarVisible ? "opacity-0 scale-0" : "opacity-100 scale-100"
+                } xl:opacity-0 xl:scale-0`}
               currentColor={theme === "dark" ? "#fff" : "#000"}
             />
             <Logo
               theme={theme}
-              className={`
-                w-36 h-auto absolute transition-all duration-300
-                ${
-                  isSidebarVisible
-                    ? "opacity-100 scale-100"
-                    : "opacity-0 scale-0"
-                }
-                xl:opacity-100 xl:scale-100
-                `}
+              className={`w-36 h-auto absolute transition-all duration-300 ${isSidebarVisible ? "opacity-100 scale-100" : "opacity-0 scale-0"
+                } xl:opacity-100 xl:scale-100`}
               animate={false}
             />
           </div>
 
           <nav className="flex flex-col mt-6">
-            <SidebarItem
-              label="Dashboard"
-              title="Dashboard"
-              icon={<Icon name="icon-home-sb" className="w-6 h-6" />}
-              isSidebarVisible={isSidebarVisible}
-              active={location.pathname === "/home"}
-              to="/home"
-            />
-            <SidebarItem
-              label="Guardar"
-              title="New register"
-              icon={<Icon name="icon-save-sb" className="w-6 h-6" />}
-              isSidebarVisible={isSidebarVisible}
-              active={
-                location.pathname === "/register" ||
-                location.pathname === "/register-vehicle" ||
-                location.pathname === "/register-installation"
-              }
-              to="/register"
-            />
-
-            <SidebarItem
-              label="Buscar"
-              title="Search"
-              icon={<Icon name="icon-search-sb" className="w-6 h-6" />}
-              isSidebarVisible={isSidebarVisible}
-              active={
-                location.pathname === "/search" ||
-                location.pathname === "/search-plate" ||
-                location.pathname === "/instllations-records"
-              }
-              to="/search"
-            />
-            <SidebarItem
-              label="Modificar"
-              title="Update"
-              icon={<Icon name="icon-update-sb" className="w-6 h-6" />}
-              isSidebarVisible={isSidebarVisible}
-              active={
-                location.pathname === "/update" ||
-                location.pathname === "/update-vehicle" ||
-                location.pathname === "/update-installation"
-              }
-              to="/update"
-            />
-            <SidebarItem
-              label="Eliminar"
-              title="Delete"
-              icon={<Icon name="icon-delete-sb" className="w-6 h-6" />}
-              isSidebarVisible={isSidebarVisible}
-              active={
-                location.pathname === "/delete" ||
-                location.pathname === "/delete-vehicle" ||
-                location.pathname === "/delete-installation"
-              }
-              to="/delete"
-            />
-            {/* {isAdmin && (
-              <>
-
-              </>
-            )} */}
+            {sidebarItems.map((item) => (
+              <SidebarItem
+                key={item.path}
+                label={item.label}
+                title={item.title}
+                icon={<Icon name={item.icon} className="w-6 h-6" />}
+                active={location.pathname.startsWith(item.path)}
+                isSidebarVisible={isSidebarVisible}
+                onClick={() => handleMenuItemClick(item.path)}
+              />
+            ))}
           </nav>
         </div>
 
@@ -175,14 +135,7 @@ export const Sidebar = ({ isAdmin }) => {
             onClick={toggleSidebarVisibility}
             className="w-10 h-10 flex items-center justify-center rounded-full xl:hidden bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700"
           >
-            {isSidebarVisible ? (
-              <Icon name="arrow-left" className="transition-all duration-300" />
-            ) : (
-              <Icon
-                name="arrow-right"
-                className="transition-all duration-300"
-              />
-            )}
+            <Icon name="arrow-right" className={`${isSidebarVisible ? "rotate-180" : ""} transition-all duration-300`} />
           </button>
           <span className="text-sm text-center text-gray-500 dark:text-gray-400">
             v1.1 Dimak

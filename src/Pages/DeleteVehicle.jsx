@@ -28,13 +28,13 @@ export default function DeleteVehicle() {
       });
     }
 
-    if (inputValue.trim() === lastSearchedValue) {
-      return customSwal.fire({
-        icon: "info",
-        title: "Sin cambios",
-        text: "Ya has buscado esta placa anteriormente.",
-      });
-    }
+    // if (inputValue.trim() === lastSearchedValue) {
+    //   return customSwal.fire({
+    //     icon: "info",
+    //     title: "Sin cambios",
+    //     text: "Ya has buscado esta placa anteriormente.",
+    //   });
+    // }
 
     // Validar la placa antes de enviar
     const validationError = validateFields.plate(inputValue.trim());
@@ -133,7 +133,7 @@ export default function DeleteVehicle() {
   return (
     <>
       <Layout>
-        <FormContainer onSubmit={handleFormSubmit} className>
+        <FormContainer onSubmit={handleFormSubmit}>
           <FormTitle>Eliminar un Vehículo</FormTitle>
           <FormSubtitle>
             Esta acción es irreversible y no se podrá recuperar el registro
@@ -148,23 +148,31 @@ export default function DeleteVehicle() {
             placeholder={"Ej. AAA-1234 o AA-123A"}
             required
             value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            onChange={(e) =>
+              setInputValue(e.target.value.toUpperCase().trim())
+            }
             className="md:col-span-2"
           ></FormField>
 
           <div className="flex items-center justify-center md:col-span-2 mt-4">
             <FormButton
               icon={
-                <Icon name="icon-delete-all-form" className={"w-6 h-6 text-white"} />
+                <Icon
+                  name="icon-delete-all-form"
+                  className={"w-6 h-6 text-white"}
+                />
               }
               text="Eliminar"
+              title="Eliminar"
               loadingText="Eliminando..."
               color="red"
               type="submit"
               isLoading={isLoading}
-              // disabled={
-              //   !inputValue.trim() || inputValue.trim() === lastSearchedValue
-              // }
+              disabled={
+                // inputValue.trim() === lastSearchedValue
+                // !inputValue.trim() || inputValue.trim() === lastSearchedValue
+                !!inputValue.trim() && inputValue.trim() === lastSearchedValue
+              }
             />
           </div>
         </FormContainer>

@@ -16,14 +16,14 @@ import ImageUploader from "../components/ImageUploader.jsx";
 import { customSwal } from "../utils/swalConfig.js";
 import Icon from "../components/Icons/Icon.jsx";
 import { NavigationIcon } from "../components/Icons/NavigationIcon.jsx";
+import { BrandSearch } from "../components/BrandSearch.jsx";
 
 export default function RegisterVehicle() {
   const [errors, setErrors] = useState({});
-  const [customBrand, setCustomBrand] = useState("");
-  const [isCustomBrandSelected, setIsCustomBrandSelected] = useState(false);
   const [filteredBrands, setFilteredBrands] = useState([]);
   const [image, setImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [brandType, setBrandType] = useState(null);
 
   const navigate = useNavigate();
 
@@ -44,8 +44,10 @@ export default function RegisterVehicle() {
   useEffect(() => {
     if (/^[A-Z]{3}-\d{4}$/.test(values.plate)) {
       setFilteredBrands(carBrands);
+      setBrandType("car");
     } else if (/^[A-Z]{2}-\d{3}[A-Z]$/.test(values.plate)) {
       setFilteredBrands(motorcycleBrands);
+       setBrandType("motorcycle");
     } else {
       setFilteredBrands([]);
     }
@@ -57,37 +59,9 @@ export default function RegisterVehicle() {
     handleChange({ target: { name: "photoUrl", value: file } });
   };
 
-  // Manejo del cambio de la marca
-  const handleBrandChange = (e) => {
-    const value = e.target.value;
-    handleChange(e);
-
-    if (value === "Otros") {
-      setIsCustomBrandSelected(true);
-      setCustomBrand(""); // Limpiar el campo cuando se elige "otros"
-    } else {
-      setIsCustomBrandSelected(false);
-      setCustomBrand(""); // También limpiamos en caso de volver a una opción normal
-    }
-  };
-
-  // Manejo del cambio del campo personalizado
-  const handleCustomBrandChange = (e) => {
-    e.preventDefault();
-    const value = e.target.value;
-    setCustomBrand(value);
-  };
-
   //  Validaciones para el formulario
   const validateForm = () => {
     const newErrors = {};
-
-    const selectedBrand = carBrands.find(
-      (brand) => brand.value === values.brand
-    );
-    values.brand = isCustomBrandSelected
-      ? customBrand
-      : selectedBrand?.label || values.brand;
 
     Object.keys(values).forEach((field) => {
       const error = validateFields[field](values[field]);
@@ -126,44 +100,45 @@ export default function RegisterVehicle() {
       if (key !== "photoUrl") formData.append(key, value);
     });
 
-      customSwal.fire({
-      title: "¿Deseas Guardar esta Instalación?",
-      showDenyButton: true,
-      showCancelButton: true,
-      confirmButtonText: "Guardar",
-      denyButtonText: `No guardar`,
-      cancelButtonText: "Cancelar",
-      icon: "question",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
+    customSwal
+      .fire({
+        title: "¿Deseas Guardar esta Instalación?",
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: "Guardar",
+        denyButtonText: `No guardar`,
+        cancelButtonText: "Cancelar",
+        icon: "question",
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          setIsLoading(true); // Inicia el estado de carga
+          const response = await HandleFetch(formData);
+          setIsLoading(false); // Finaliza el estado de carga
 
-        setIsLoading(true); // Inicia el estado de carga
-        const response = await HandleFetch(formData);
-        setIsLoading(false); // Finaliza el estado de carga
-
-        if (response.isSuccess === true) {
-          customSwal.fire({
-            title: "¡Guardado!",
-            text: `Vehículo con placa ${values.plate} ha sido guardado.`,
-            icon: "success",
-            focusConfirm: false, // Evita que el botón de "Aceptar" enfoque automáticamente y haga scroll
-            didOpen: () => {
-              document.activeElement.blur(); // Quita el foco de cualquier elemento activo al abrir la alerta
-            },
-            willClose: () => {
-              document.body.style.overflow = "auto"; // Por si SweetAlert bloqueó el scroll, lo desbloqueamos antes de cerrar
-            },
-            didClose: () => {
-              // Forzarmos el scroll al top una vez que la alerta ya se cerró
-              window.scrollTo({ top: 0, behavior: "smooth" });
-            },
-          });
-          resetFormAndFile();
+          if (response.isSuccess === true) {
+            customSwal.fire({
+              title: "¡Guardado!",
+              text: `Vehículo con placa ${values.plate} ha sido guardado.`,
+              icon: "success",
+              focusConfirm: false, // Evita que el botón de "Aceptar" enfoque automáticamente y haga scroll
+              didOpen: () => {
+                document.activeElement.blur(); // Quita el foco de cualquier elemento activo al abrir la alerta
+              },
+              willClose: () => {
+                document.body.style.overflow = "auto"; // Por si SweetAlert bloqueó el scroll, lo desbloqueamos antes de cerrar
+              },
+              didClose: () => {
+                // Forzarmos el scroll al top una vez que la alerta ya se cerró
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              },
+            });
+            resetFormAndFile();
+          }
+        } else if (result.isDenied) {
+          customSwal.fire("Cambios no guardados", "", "info");
         }
-      } else if (result.isDenied) {
-        customSwal.fire("Cambios no guardados", "", "info");
-      }
-    });
+      });
   };
 
   // Función para limpiar el formulario
@@ -172,7 +147,6 @@ export default function RegisterVehicle() {
     setErrors({});
     setImage(null); // Limpia la imagen de la vista previa
     values.photoUrl = null; // Limpia el valor del archivo
-    setCustomBrand("");
     const fileInput = document.querySelector('input[type="file"]'); // Selecciona el campo de archivo
     if (fileInput) fileInput.value = ""; // Limpia el valor del campo de archivo en el DOM
   };
@@ -249,35 +223,17 @@ export default function RegisterVehicle() {
             required
           />
 
-          <FormField id="brand" label="Marca" error={errors.brand}>
-            <select
-              id="brand"
-              name="brand"
-              value={values.brand}
-              onChange={handleBrandChange}
-              className="px-4 py-2 text-base border border-gray-300 rounded-lg bg-[rgb(248,249,252)] dark:bg-[rgb(176,176,176)] dark:border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-gray-600 dark:focus:border-gray-500 outline-none"
-            >
-              <option value="" disabled>
-                Selecciona una marca
-              </option>
-              {filteredBrands.map((brand) => (
-                <option key={brand.value} value={brand.label}>
-                  {brand.label}
-                </option>
-              ))}
-            </select>
-          </FormField>
-
-          {isCustomBrandSelected && (
-            <FormField
-              id="customBrand"
-              label="Marca Personalizada"
-              value={customBrand}
-              error={errors.brand}
-              onChange={handleCustomBrandChange}
-              className="md:col-span-2"
-            />
-          )}
+          <BrandSearch
+            id="brand"
+            name="brand"
+            label="Marca"
+            brands={filteredBrands} // lista de marcas (carBrands o motorcycleBrands)
+            value={values.brand}
+            error={errors.brand}
+            onChange={handleChange} // conecta con useForm
+            iconName={brandType === "car" ? "car" : "motorcycle"}
+            placeholder="Por favor, indique la marca"
+          />
 
           <FormField
             id="model"
@@ -321,7 +277,7 @@ export default function RegisterVehicle() {
           <FormField
             id="invoiceNumber"
             label="Nº de Factura"
-            placeholder="Ej. 001-001-123456789"
+            placeholder="Ej. 001-001-123456789 o 001-001-OP1234567."
             value={values.invoiceNumber}
             error={errors.invoiceNumber}
             onChange={handleChange}
@@ -347,6 +303,7 @@ export default function RegisterVehicle() {
           />
 
           <FormField
+            id="installationCompleted"
             label="Instalación Completada"
             error={errors.installationCompleted}
             className="md:col-span-2"
@@ -363,12 +320,13 @@ export default function RegisterVehicle() {
           </FormField>
 
           <FormField
+            id="photoUrl"
             label="Foto de Instalación"
             error={errors.photoUrl}
             className="md:col-span-2"
           >
             <ImageUploader
-              id="installationPhoto"
+              id="photoUrl"
               title="Cargar Foto"
               image={image} // aquí pasas tu estado con la foto
               onFileChange={handleFileChange} // aquí manejas el cambio en tu form
@@ -379,6 +337,7 @@ export default function RegisterVehicle() {
             <NavigationIcon
               icon={<Icon name="icon-back" className={"w-6 h-6"} />}
               text="Volver"
+              type="button"
               title="Volver"
               color="blue"
               onClick={() => navigate(-1)}

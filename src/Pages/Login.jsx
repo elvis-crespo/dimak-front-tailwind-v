@@ -39,7 +39,7 @@ export default function Login() {
   return (
     <>
       <div
-        className="font-apple flex flex-col items-center justify-center min-h-screen w-full bg-[url('/assets/images/image-login-mobile.png')] md:bg-[url('/assets/images/image-login.png')] 
+        className="font-apple flex flex-col items-center justify-center min-h-screen w-full bg-[url('/assets/images/image-login-mobile.jpg')] md:bg-[url('/assets/images/image-login.jpg')] 
         bg-no-repeat bg-cover bg-center text-white dark:text-black transition-all duration-300 animate-fadeInSlight"
       >
         <FormContainer

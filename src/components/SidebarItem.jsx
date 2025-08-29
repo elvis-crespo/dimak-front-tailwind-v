@@ -1,18 +1,19 @@
 /* eslint-disable react/prop-types */
-import { NavLink } from "react-router-dom";
+// import { NavLink } from "react-router-dom";
 
 const SidebarItem = ({
   label,
   title,
   icon,
   active,
-  to,
+  // to,
   isSidebarVisible,
+  onClick,
   className = "",
 }) => {
   return (
-    <NavLink
-      to={to}
+    <button
+      // to={to}
       title={title}
       className={`
         flex items-center gap-3 rounded-lg cursor-pointer transition-all duration-300
@@ -26,6 +27,7 @@ const SidebarItem = ({
         ${active ? "bg-gray-100 dark:bg-[#ff0000] font-bold" : ""}
         ${className}
       `}
+      onClick={onClick}
     >
       {icon}
       <span
@@ -37,7 +39,7 @@ const SidebarItem = ({
       >
         {label}
       </span>
-    </NavLink>
+    </button>
   );
 };
 

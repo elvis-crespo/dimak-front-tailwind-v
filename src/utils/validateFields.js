@@ -60,7 +60,7 @@ export const validateFields = {
     const regex = /^\d{3}-\d{3}-(\d{9}|[A-Z]{2}\d{7})$/; // Tres números, guion, tres números, guion, nueve números o dos letras + siete números
     if (!value) return null;
     if (!regex.test(value))
-      return "El formato del número de factura debe ser 123-456-7890123456789 o 123-456-AA1234567.";
+      return "El formato del número de factura debe ser 001-001-123456789 o 001-001-OP1234567.";
     if (value.length !== 17)
       return "El número de factura debe tener 17 caracteres.";
     return null;

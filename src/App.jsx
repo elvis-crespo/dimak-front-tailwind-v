@@ -5,8 +5,6 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import React, { Suspense, useState } from "react";
 import { useSelector } from "react-redux";
 import { useAuth } from "./Hooks/useAuth";
-import { Sidebar } from "./components/SideBar";
-import DropdownMenu from "./components/DropdownMenu";
 
 const RegisterCards = React.lazy(() => import("./Pages/RegisterCards"));
 const RegisterVehicle = React.lazy(() => import("./Pages/RegisterVehicle"));
@@ -52,12 +50,12 @@ function App() {
         v7_relativeSplatPath: true,
       }}
     >
-      {isLoggedIn && (
+      {/* {isLoggedIn && (
         <>
           <Sidebar isAdmin={isAdmin}></Sidebar>
           <DropdownMenu />
         </>
-      )}
+      )} */}
       <Suspense
         fallback={
           <div
@@ -74,7 +72,7 @@ function App() {
         <Routes>
           <Route path="*" element={<NotFound />} />
           {isLoggedIn ? (
-            <Route path="/" element={<Navigate to="/home" />} />
+            <Route path="/" element={<Navigate to="/*" />} />
           ) : (
             <Route path="/" element={<Login />} />
           )}

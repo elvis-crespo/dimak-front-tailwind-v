@@ -7,13 +7,25 @@ import {
 } from "../components/Form";
 import { useForm } from "../Hooks/useForm";
 import axiosInstance from "../utils/axiosInstance";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { validateFields } from "../utils/validateFields";
 import Layout from "../components/Layout";
 import { customSwal } from "../utils/swalConfig";
+
 import Icon from "../components/Icons/Icon";
+import { carBrands, motorcycleBrands } from "../utils/brands";
+import { BrandSearch } from "../components/BrandSearch";
 
 export default function UpdateVehicle() {
+  const [inputSearch, setInputSearch] = useState("");
+  const [lastSearchedValue, setLastSearchedValue] = useState("");
+  const [filteredBrands, setFilteredBrands] = useState([]);
+   const [brandType, setBrandType] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [initialValues, setInitialValues] = useState(null);
+  const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+
   const { values, handleChange, resetForm, setValues } = useForm({
     plate: "",
     ownerName: "",
@@ -22,14 +34,47 @@ export default function UpdateVehicle() {
     year: "",
   });
 
-  const [lastSearchedValue, setLastSearchedValue] = useState("");
-  const [isEditing, setIsEditing] = useState(false);
-  const [initialValues, setInitialValues] = useState(null);
-  const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  useEffect(() => {
+    if (/^[A-Z]{3}-\d{4}$/.test(values.plate)) {
+      setFilteredBrands(carBrands);
+    } else if (/^[A-Z]{2}-\d{3}[A-Z]$/.test(values.plate)) {
+      setFilteredBrands(motorcycleBrands);
+    } else {
+      setFilteredBrands([]);
+    }
+  }, [values.plate]);
 
-  const handleSearch = async () => {
-    const validationError = validateFields.plate(values.plate.trim());
+  const mapVehicleData = (data) => ({
+    plate: data.plate || "",
+    ownerName: data.ownerName || "",
+    brand: data.brand || "",
+    model: data.model || "",
+    year: data.year || null,
+  });
+
+  useEffect(() => {
+    if (/^[A-Z]{3}-\d{4}$/.test(values.plate)) {
+      setFilteredBrands(carBrands);
+      setBrandType("car");
+    } else if (/^[A-Z]{2}-\d{3}[A-Z]$/.test(values.plate)) {
+      setFilteredBrands(motorcycleBrands);
+      setBrandType("motorcycle");
+    } else {
+      setFilteredBrands([]);
+    }
+  }, [values.plate]);
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+
+    if (!inputSearch.trim())
+      return customSwal.fire({
+        icon: "warning",
+        title: "Campo vacío",
+        text: "Por favor, ingrese un valor en el campo de búsqueda.",
+      });
+
+    const validationError = validateFields.plate(inputSearch.trim());
     if (validationError) {
       customSwal.fire({
         icon: "error",
@@ -39,30 +84,19 @@ export default function UpdateVehicle() {
       return;
     }
 
-    if (values.plate.trim() === lastSearchedValue.trim()) {
-      return;
-    }
-    setLastSearchedValue(values.plate.trim());
+    setLastSearchedValue(inputSearch.trim());
 
     try {
       setIsLoading(true);
       const response = await axiosInstance.get(
-        `/vehicle/search-plate?plate=${values.plate}`
+        `/vehicle/search-plate?plate=${inputSearch}`
       );
 
       if (response.data.isSuccess) {
-        const vehicleData = response.data.data;
+        const mappedData = mapVehicleData(response.data.data);
 
-        // Actualizamos los valores correctamente
-        setValues({
-          ...values,
-          ownerName: vehicleData.ownerName,
-          brand: vehicleData.brand,
-          model: vehicleData.model,
-          year: vehicleData.year,
-        });
-
-        setInitialValues(vehicleData); // Guardamos los valores iniciales
+        setValues(mappedData); //update form values with fetched data
+        setInitialValues(mappedData); // save changes for comparison
         setIsEditing(true);
       } else {
         customSwal.fire({
@@ -88,11 +122,9 @@ export default function UpdateVehicle() {
 
   const hasChanges = () => {
     if (!initialValues) return false; // Si no hay valores iniciales, no hay cambios
-    return (
-      values.ownerName !== initialValues.ownerName ||
-      values.brand !== initialValues.brand ||
-      values.model !== initialValues.model ||
-      values.year !== initialValues.year
+
+    return Object.keys(values).some(
+      (key) => values[key] !== initialValues[key]
     );
   };
 
@@ -105,48 +137,38 @@ export default function UpdateVehicle() {
       return;
     }
 
-    if (!hasChanges()) {
-      customSwal.fire({
-        title: "No hay cambios",
-        text: "No se han realizado cambios en los datos del vehículo.",
-        icon: "info",
-      });
-      return;
-    }
+    customSwal
+      .fire({
+        title: "¿Deseas guardar los cambios?",
+        icon: "question",
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: "Guardar",
+        denyButtonText: "No guardar",
+      })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          const response = await handleFetch();
 
-    customSwal.fire({
-      title: "¿Deseas guardar los cambios?",
-      icon: "question",
-      showDenyButton: true,
-      showCancelButton: true,
-      confirmButtonText: "Guardar",
-      denyButtonText: "No guardar",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        const response = await handleFetch();
-
-        if (response.isSuccess) {
-          customSwal.fire({
-            title: "¡Actualizado!",
-            text: `Vehículo con placa ${values.plate} ha sido actualizado.`,
-            icon: "success",
-          });
-
-          resetForm();
-          setErrors({}); // Limpiar errores
-          setInitialValues(null); // Limpiar valores iniciales
-          setLastSearchedValue(""); // Limpiar el último valor buscado
-          setIsEditing(false); // Deshabilita edición después de actualizar
-        } else {
-          customSwal.fire({
-            title: "Error",
-            text:
-              response.message || "Hubo un problema al actualizar el vehículo.",
-            icon: "error",
-          });
+          if (response.isSuccess) {
+            customSwal.fire({
+              title: "¡Actualizado!",
+              text: `Vehículo con placa ${values.plate} ha sido actualizado.`,
+              icon: "success",
+            });
+            HandleReset();
+            setIsEditing(false);
+          } else {
+            customSwal.fire({
+              title: "Error",
+              text:
+                response.message ||
+                "Hubo un problema al actualizar el vehículo.",
+              icon: "error",
+            });
+          }
         }
-      }
-    });
+      });
   };
 
   const handleFetch = async () => {
@@ -171,6 +193,14 @@ export default function UpdateVehicle() {
     }
   };
 
+  const HandleReset = () => {
+    resetForm();
+    setInputSearch("");
+    setLastSearchedValue("");
+    setInitialValues(null);
+    setErrors({});
+  };
+
   const validateForm = () => {
     const newErrors = {};
     // Validar cada campo usando las funciones de validación
@@ -186,18 +216,20 @@ export default function UpdateVehicle() {
 
   return (
     <Layout>
-      <FormContainer onSubmit={handleFormSubmit}>
+      <FormContainer onSubmit={handleSearch}>
         <FormTitle>Actualizar Información de Vehículo</FormTitle>
         <FormSubtitle>Detalles del Vehículo</FormSubtitle>
 
         <div className="md:col-span-2 flex items-center md:items-end justify-between flex-col md:flex-row gap-4">
           <FormField
             label="Placa"
-            id="plate"
+            id="plateSearch"
             required
             placeholder="Ej. AAA-1234 o AA-123A"
-            value={values.plate}
-            onChange={handleChange}
+            value={inputSearch}
+            onChange={(e) =>
+              setInputSearch(e.target.value.toUpperCase().trim())
+            }
             className="w-full md:w-[75%]"
           />
 
@@ -206,95 +238,122 @@ export default function UpdateVehicle() {
               <Icon name="icon-search-form" className={"w-6 h-6 text-white"} />
             }
             text="Buscar"
+            title="Buscar por placa"
             loadingText="Buscando..."
             type="submit"
             color="blue"
-            onClick={handleSearch}
+            // !!inputSearch.trim() evita que se envie el form si el input esta vacio
             disabled={
-              !values.plate.trim() || values.plate === lastSearchedValue
+              !!inputSearch.trim() && inputSearch.trim() === lastSearchedValue
             }
             isLoading={isLoading}
           />
         </div>
-
-        {isEditing && (
-          <>
-            <div
-              style={{
-                borderTop: "1px solid #ccc",
-                width: "100%",
-                margin: "1rem 0",
-              }}
-              className="md:col-span-2"
-            />
-            <FormField
-              label="Placa"
-              id="plate"
-              required
-              value={initialValues?.plate || ""}
-              disabled
-            />
-
-            <FormField
-              id="ownerName"
-              label="Nombre del Cliente"
-              value={values.ownerName}
-              error={errors.ownerName}
-              onChange={handleChange}
-              required
-              className="md:col-span-2"
-            />
-
-            <FormField
-              id="brand"
-              label="Marca"
-              value={values.brand}
-              error={errors.brand}
-              onChange={handleChange}
-            />
-
-            <FormField
-              id="model"
-              label="Modelo"
-              value={values.model}
-              error={errors.model}
-              onChange={handleChange}
-            />
-
-            <FormField
-              id="year"
-              label="Año"
-              type="number"
-              value={values.year}
-              error={errors.year}
-              min={1900}
-              max={2100}
-              onChange={handleChange}
-              onKeyDown={(e) => {
-                if (e.key === "-" || e.key === "e") e.preventDefault();
-              }}
-              onWheel={(e) => e.target.blur()}
-            />
-            <FormSubtitle className="text-sm font-normal md:col-span-2">
-              Asegúrate de que todos los campos estén correctos antes de
-              actualizar.
-            </FormSubtitle>
-            <div className="flex items-center justify-center md:justify-end md:col-span-2 mt-4">
-              <FormButton
-                icon={
-                  <Icon name="icon-update-form" className={"w-6 h-6 text-white"} />
-                }
-                text="Actualizar"
-                loadingText="Actualizando..."
-                type="submit"
-                color="blue"
-                isLoading={isLoading}
-                // disabled={!hasChanges()}
-              />
-            </div>
-          </>
-        )}
       </FormContainer>
+
+      {isEditing && (
+        <FormContainer onSubmit={handleFormSubmit}>
+          <div
+            style={{
+              borderTop: "1px solid #ccc",
+              width: "100%",
+              margin: "1rem 0",
+            }}
+            className="md:col-span-2"
+          />
+          <FormField
+            id="plate"
+            label="Placa"
+            required
+            value={values.plate}
+            disabled
+          />
+
+          <FormField
+            id="ownerName"
+            label="Nombre del Cliente"
+            required
+            value={values.ownerName}
+            error={errors.ownerName}
+            onChange={handleChange}
+            className="md:col-span-2"
+          />
+
+          {/* <FormField id="brand" label="Marca" error={errors.brand}>
+            <input
+              id="brand"
+              name="brand"
+              list="brands"
+              value={values.brand}
+              autoComplete="off"
+              onChange={handleChange}
+              placeholder="Escriba o seleccione una marca"
+              className="px-4 py-2 text-base border border-gray-300 rounded-lg bg-[rgb(248,249,252)] dark:bg-[rgb(176,176,176)] dark:border-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:focus:ring-gray-600 dark:focus:border-gray-500 outline-none"
+            />
+            <datalist id="brands">
+              {filteredBrands.map((brand) => (
+                <option key={brand.value} value={brand.label} />
+              ))}
+            </datalist>
+          </FormField> */}
+
+          <BrandSearch
+            id="brand"
+            name="brand"
+            label="Marca"
+            brands={filteredBrands}
+            value={values.brand}
+            error={errors.brand}
+            onChange={handleChange}
+            iconName={brandType === "car" ? "car" : "motorcycle"}
+            placeholder="Por favor, indique la marca"
+          />
+
+          <FormField
+            id="model"
+            label="Modelo"
+            value={values.model}
+            error={errors.model}
+            onChange={handleChange}
+          />
+
+          <FormField
+            id="year"
+            label="Año"
+            type="number"
+            value={values.year}
+            error={errors.year}
+            min={1900}
+            max={2100}
+            onChange={handleChange}
+            onKeyDown={(e) => {
+              if (e.key === "-" || e.key === "e") e.preventDefault();
+            }}
+            onWheel={(e) => e.target.blur()}
+          />
+          <FormSubtitle className="text-sm font-normal md:col-span-2">
+            Asegúrate de que todos los campos estén correctos antes de
+            actualizar.
+          </FormSubtitle>
+          <div className="flex items-center justify-center md:justify-end md:col-span-2 mt-4">
+            <FormButton
+              icon={
+                <Icon
+                  name="icon-update-form"
+                  className={"w-6 h-6 text-white"}
+                />
+              }
+              text="Actualizar"
+              title="Actualizar Información de Vehículo"
+              loadingText="Actualizando..."
+              type="submit"
+              color="blue"
+              disabled={!hasChanges()}
+              isLoading={isLoading}
+            />
+          </div>
+        </FormContainer>
+      )}
     </Layout>
   );
 }

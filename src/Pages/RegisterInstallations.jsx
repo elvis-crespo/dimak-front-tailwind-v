@@ -91,6 +91,7 @@ export default function RegisterInstallations() {
     });
 
     customSwal.fire({
+      icon: "question",
       title: "¿Deseas Guardar esta Instalación?",
       showDenyButton: true,
       showCancelButton: true,
@@ -107,7 +108,7 @@ export default function RegisterInstallations() {
         if (response.isSuccess === true) {
           customSwal.fire({
             title: "¡Guardado!",
-            text: `Instalación con placa ${values.plate} ha sido guardada.`,
+            text: `Se ha registrado una nueva instalación para el vehículo con placa ${values.plate}.`,
             icon: "success",
             focusConfirm: false, // Evita que el botón de "Aceptar" enfoque automáticamente y haga scroll
             didOpen: () => {
@@ -233,6 +234,7 @@ export default function RegisterInstallations() {
         />
 
         <FormField
+          id="installationCompleted"
           label="Instalación Completada"
           error={errors.installationCompleted}
           className="md:col-span-2"
@@ -248,30 +250,27 @@ export default function RegisterInstallations() {
           />
         </FormField>
 
-        <FormField className="md:col-span-2">
-          <label
-            htmlFor="installationPhoto"
-            className="text-sm font-medium text-gray-700 dark:text-gray-200"
-          >
-            Foto de Instalación
-          </label>
-
+        <FormField
+          id="photoUrl"
+          label="Foto de Instalación"
+          error={errors.photoUrl}
+          className="md:col-span-2"
+        >
           <ImageUploader
-            id="installationPhoto"
+            id="photoUrl"
             title="Cargar Foto"
             image={image} // aquí pasas tu estado con la foto
             onFileChange={handleFileChange} // aquí manejas el cambio en tu form
           />
-
-          {errors.photoUrl && (
-            <span className="text-red-500 text-xs">{errors.photoUrl}</span>
-          )}
         </FormField>
 
         <div className="hidden md:flex justify-start  items-center mt-4">
           <NavigationIcon
             icon={<Icon name="icon-back" className={"w-6 h-6"} />}
             text="Volver"
+            title="Volver"
+            loadingText="Cargando..."
+            type="button"
             color="blue"
             onClick={() => navigate(-1)}
           />

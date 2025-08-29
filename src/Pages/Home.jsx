@@ -1,6 +1,8 @@
 import { useSelector } from "react-redux";
 import Particles from "../components/Particles";
 import { Logo } from "../../public/Logo";
+import { Sidebar } from "../components/SideBar";
+import DropdownMenu from "../components/DropdownMenu";
 
 const quotes = [
   {
@@ -67,9 +69,11 @@ export default function Home() {
   const { user } = useSelector((state) => state.user);
   const theme = useSelector((state) => state.theme.theme);
 
-  const userName = user?.[
-    "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
-  ];
+  const userName =
+    user?.["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
+  const isAdmin =
+    user?.["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] ===
+    "Admin";
 
   const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
 
@@ -82,18 +86,18 @@ export default function Home() {
   return (
     <>
       <Particles />
-      <div className="min-h-screen flex-1 flex flex-col items-center justify-center md:ml-[72px] pt-20 xl:ml-64 p-4 sm:p-8 lg:p-16"
-      >
+      <Sidebar isAdmin={isAdmin} />
+      <DropdownMenu />
+      <div className="min-h-screen flex-1 flex flex-col items-center justify-center md:ml-[72px] pt-20 xl:ml-64 p-4 sm:p-8 lg:p-16">
         <Logo theme={theme} />
 
         <h1 className=" text-lg sm:text-2xl lg:text-3xl text-text-light dark:text-text-dark transition-all duration-300 ease-in-out hover:bg-white hover:dark:bg-gray-950 hover:drop-shadow-lg hover:cursor-crosshair z-10 p-4 mt-4 mmt-8">
-          {greeting}{" "}
-          {userName|| "undefined user"}
+          {greeting} {userName || "undefined user"}
         </h1>
 
         <div className=" text-text-light dark:text-text-dark transition-all duration-300 ease-in-out hover:bg-white hover:dark:bg-gray-950 hover:drop-shadow-lg hover:cursor-crosshair rounded z-10 p-4">
           <p className="text-sm sm:text-lg lg:text-xl italic flex justify-center items-center">
-            &quot;{randomQuote.quote}&quot; 
+            &quot;{randomQuote.quote}&quot;
           </p>
           <span className="text-xs sm:text-sm md:text-lg italic flex justify-end pt-2">
             - {randomQuote.author}

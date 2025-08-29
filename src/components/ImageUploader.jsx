@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import showImage from "./ShowImage";
 
-const ImageUploader = ({ image, onFileChange, title }) => {
+const ImageUploader = ({ id,  image, onFileChange, title }) => {
   const [preview, setPreview] = useState(image);
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const ImageUploader = ({ image, onFileChange, title }) => {
     <div>
       {/* Botón para subir archivo */}
       <label
-        htmlFor="file-upload"
+        htmlFor={id}
         className="inline-block cursor-pointer rounded-lg bg-[#ff9494] dark:bg-[#6d6d6d] px-4 py-2 text-white text-center hover:bg-red-400 dark:hover:bg-gray-700  transition-colors"
       >
         {title}
@@ -43,8 +43,8 @@ const ImageUploader = ({ image, onFileChange, title }) => {
 
       {/* Input escondido */}
       <input
-        id="file-upload"
-        name="installationPhoto"
+        id={id}
+        name={id}
         type="file"
         accept="image/*"
         onChange={handleFileChange}

@@ -31,14 +31,14 @@ export default function InstallationsTable() {
 
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [inputValue, setInputValue] = useState("");
+  const [inputSearch, setinputSearch] = useState("");
   const [lastSearchedValue, setLastSearchedValue] = useState("");
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     event.preventDefault();
-    if (!inputValue.trim()) {
+    if (!inputSearch.trim()) {
       return customSwal.fire({
         icon: "warning",
         title: "Campo vacío",
@@ -46,16 +46,8 @@ export default function InstallationsTable() {
       });
     }
 
-    if (inputValue.trim() === lastSearchedValue) {
-      return customSwal.fire({
-        icon: "info",
-        title: "Sin cambios",
-        text: "Ya has buscado esta Nº de Factura.",
-      });
-    }
-
     // Validar la placa antes de enviar
-    const validationError = validateFields.invoiceNumber(inputValue.trim());
+    const validationError = validateFields.invoiceNumber(inputSearch.trim());
     if (validationError) {
       Swal.fire({
         icon: "error",
@@ -64,14 +56,14 @@ export default function InstallationsTable() {
       });
       return;
     }
-    setLastSearchedValue(inputValue.trim()); // Limpia el último valor buscado.
+    setLastSearchedValue(inputSearch.trim()); // Limpia el último valor buscado.
 
     const response = await handleFetch();
 
     if (response.isSuccess === true) {
       const transform = [response.data];
       setData(transform);
-      setLastSearchedValue(inputValue.trim()); // Actualiza el último valor buscado.
+      setLastSearchedValue(inputSearch.trim()); // Actualiza el último valor buscado.
     }
   };
 
@@ -80,7 +72,7 @@ export default function InstallationsTable() {
     setData([]);
     try {
       const response = await axiosInstance.get(
-        `/installation/?invoiceNumber=${inputValue}`,
+        `/installation/?invoiceNumber=${inputSearch}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -96,7 +88,7 @@ export default function InstallationsTable() {
         customSwal.fire({
           icon: "info",
           title: "No encontrado",
-          text: `No existe ninguna instalación registrada con el Nº de Factura ${inputValue}.`,
+          text: `No existe ninguna instalación registrada con el Nº de Factura ${inputSearch}.`,
         });
       } else if (!error.response) {
         // Otro tipo de error en la respuesta del servidor (sin respuesta)
@@ -133,10 +125,9 @@ export default function InstallationsTable() {
               name="invoiceNumber"
               autoComplete="off"
               placeholder="Buscar por número de factura (001-001-123456789 o 001-001-op3456789)"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
+              value={inputSearch}
+              onChange={(e) => setinputSearch(e.target.value.toUpperCase().trim())}
               className="border border-gray-300 dark:text-white rounded-lg px-4 py-2 w-full md:w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              disabled={isLoading}
             />
             <div className="flex items-center justify-start md:col-span-2 gap-4">
               <FormButton
@@ -147,11 +138,12 @@ export default function InstallationsTable() {
                   />
                 }
                 text="Buscar"
+                title="Buscar Instalación"
                 loadingText="Buscando..."
                 color="blue"
                 type="submit"
-                disabled={isLoading}
                 isLoading={isLoading}
+                disabled={!!inputSearch.trim() && inputSearch.trim() === lastSearchedValue}
               />
               <FormButton
                 icon={
@@ -161,18 +153,16 @@ export default function InstallationsTable() {
                   />
                 }
                 text="Ver Todos"
+                title="Contruyendo..."
                 loadingText="Cargando..."
                 color="blue"
                 type="submit"
-                disabled
                 className={"w-32"}
                 onClick={() => {
                   alert("Ver Todos");
                 }}
                 isLoading={isLoading}
-                // disabled={
-                //   !inputValue.trim() || inputValue.trim() === lastSearchedValue
-                // }
+                disabled
               />
             </div>
           </form>

@@ -8,12 +8,21 @@ export const useForm = (initialValues) => {
     if (type === "file") {
       setValues({
         ...values,
-        [name]: files[0], 
+        [name]: files[0],
       });
     } else {
+      const upperCaseFields = ["plate", "technicalFileNumber", "invoiceNumber"];
+
+      // Normalización general
+      let cleanedValue = value;
+      if (typeof cleanedValue === "string") {
+        cleanedValue = upperCaseFields.includes(name)
+          ? cleanedValue.toUpperCase().trim()
+          : cleanedValue.trimStart();
+      }
       setValues({
         ...values,
-        [name]: value || "",
+        [name]: cleanedValue,
       });
     }
   };

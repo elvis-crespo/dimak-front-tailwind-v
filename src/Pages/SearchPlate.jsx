@@ -25,14 +25,6 @@ export default function SearchPlate() {
       });
     }
 
-    if (inputValue.trim() === lastSearchedValue) {
-      return customSwal.fire({
-        icon: "info",
-        title: "Sin cambios",
-        text: "Ya has buscado esta placa.",
-      });
-    }
-
     // Validar la placa antes de enviar
     const validationError = validateFields.plate(inputValue.trim());
     if (validationError) {
@@ -113,9 +105,8 @@ export default function SearchPlate() {
               autoComplete="off"
               placeholder="Buscar por placa (AAA-1234 o AA-123A)"
               value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
+              onChange={(e) => setInputValue(e.target.value.toUpperCase().trim())}
               className="border border-gray-300 rounded-lg dark:text-white px-4 py-2 w-full md:w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              disabled={isLoading}
             />
             <div className="flex items-center justify-start md:col-span-2 gap-4">
               <FormButton
@@ -126,11 +117,13 @@ export default function SearchPlate() {
                   />
                 }
                 text="Buscar"
+                title="Buscar por placa"
                 loadingText="Buscando..."
                 color="blue"
                 type="submit"
-                disabled={isLoading}
                 isLoading={isLoading}
+                disabled={
+                  !!inputValue.trim() && inputValue.trim() === lastSearchedValue}
               />
               <FormButton
                 icon={
@@ -140,18 +133,16 @@ export default function SearchPlate() {
                   />
                 }
                 text="Ver Todos"
+                title="Construyendo..."
                 loadingText="Cargando..."
                 color="blue"
                 type="submit"
-                disabled
                 className={"w-32"}
                 onClick={() => {
                   alert("Ver Todos");
                 }}
                 isLoading={isLoading}
-                // disabled={
-                // !inputValue.trim() || inputValue.trim() === lastSearchedValue
-                // }
+                disabled
               />
             </div>
           </form>
