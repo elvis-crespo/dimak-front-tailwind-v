@@ -30,6 +30,8 @@ const FormButton = ({
     },
   };
 
+   const isDisabled = disabled || isLoading;
+
   const chosen = colorClasses[color] || colorClasses.teal;
 
   // Para desactivar el boton y no hacer larga la clase
@@ -40,11 +42,11 @@ const FormButton = ({
     <button
       title={title}
       className={`flex w-32 h-[42px] rounded-md overflow-hidden shadow-md group ${className} ${
-        disabled ? "cursor-not-allowed opacity-70" : "cursor-pointer"
+        isDisabled ? "cursor-not-allowed opacity-70" : "cursor-pointer"
       } ${isLoading ? "w-36 opacity-70 cursor-not-allowed" : ""}`}
       type={type}
       onClick={onClick}
-      disabled={disabled}
+      disabled={isDisabled}
     >
       <span
         className={`flex w-[35%] h-full items-center justify-center text-white transition-colors duration-200 ${iconClass}`}

@@ -103,9 +103,9 @@ export const validateFields = {
   },
   // installationCompleted: () => null,
   photoUrl: (file) => {
-    const maxSize = 1 * 1024 * 1024; // 1MB
+    const maxSize = 500 * 1024; // 500KB
     if (file && file.size > maxSize)
-      return "La imagen no puede ser mayor a 1MB.";
+      return "La imagen no puede ser mayor a 500KB.";
     return null;
   },
 };

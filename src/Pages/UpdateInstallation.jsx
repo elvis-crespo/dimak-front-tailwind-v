@@ -18,6 +18,7 @@ export default function UpdateInstallations() {
 
   const [inputSearch, setInputSearch] = useState("");
   const [lastSearchedValue, setLastSearchedValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const [image, setImage] = useState(null);
@@ -76,6 +77,7 @@ export default function UpdateInstallations() {
     setLastSearchedValue(inputSearch.trim());
 
     try {
+      setIsLoading(true);
       const response = await axiosInstance.get(
         `/installation/technical?technicalFileNumber=${inputSearch}`
       );
@@ -105,6 +107,8 @@ export default function UpdateInstallations() {
         }`,
         icon: "error",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -165,7 +169,9 @@ export default function UpdateInstallations() {
       })
       .then(async (result) => {
         if (result.isConfirmed) {
+          setIsLoading(true);
           const response = await HandleFetch(formData);
+          setIsLoading(false);
 
           if (response.isSuccess) {
             customSwal.fire({
@@ -247,11 +253,12 @@ export default function UpdateInstallations() {
             }
             text="Buscar"
             title="Buscar Instalación"
+            loadingText="Buscando..."
+            isLoading={isLoading}
             type="submit"
             color="blue"
             disabled={
-              !!inputSearch.trim() && inputSearch.trim() === lastSearchedValue
-            }
+              !!inputSearch.trim() && inputSearch.trim() === lastSearchedValue}
           />
         </div>
       </FormContainer>
@@ -351,6 +358,7 @@ export default function UpdateInstallations() {
               type="submit"
               color="blue"
               loadingText="Actualizando..."
+              isLoading={isLoading}
               disabled={!hasChanges()}
             />
           </div>

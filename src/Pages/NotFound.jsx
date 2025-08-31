@@ -32,7 +32,7 @@ export default function NotFound() {
           src="/assets/images/404.jpg"
           alt="404"
           title="Sorry! Spiterman"
-          className="w-1/2 rounded-2xl mb-6 lg:mb-8"
+          className="w-1/2 rounded-2xl mb-6 lg:mb-8 cursor-pointer grayscale hover:grayscale-0 hover:saturate-150 hover:brightness-110 hover:scale-105 transition-all duration-300 ease-in-out"
           // className="w-1/2 rounded-2xl animate-bounce mb-6 lg:my-8"
         />
 

@@ -173,6 +173,7 @@ export default function UpdateVehicle() {
 
   const handleFetch = async () => {
     try {
+      setIsLoading(true);
       const response = await axiosInstance.put(
         `/vehicle/update?plate=${values.plate}`,
         values,
@@ -190,6 +191,8 @@ export default function UpdateVehicle() {
       });
 
       return error.response?.data || { isSuccess: false };
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -242,11 +245,11 @@ export default function UpdateVehicle() {
             loadingText="Buscando..."
             type="submit"
             color="blue"
+            isLoading={isLoading}
             // !!inputSearch.trim() evita que se envie el form si el input esta vacio
             disabled={
               !!inputSearch.trim() && inputSearch.trim() === lastSearchedValue
             }
-            isLoading={isLoading}
           />
         </div>
       </FormContainer>
@@ -272,6 +275,7 @@ export default function UpdateVehicle() {
           <FormField
             id="ownerName"
             label="Nombre del Cliente"
+            placeholder="Ej. John Doe"
             required
             value={values.ownerName}
             error={errors.ownerName}

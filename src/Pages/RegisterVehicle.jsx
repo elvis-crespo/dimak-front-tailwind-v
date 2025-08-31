@@ -205,6 +205,7 @@ export default function RegisterVehicle() {
           <FormField
             id="ownerName"
             label="Nombre del Cliente"
+            placeholder="Ej. John Doe"
             value={values.ownerName}
             error={errors.ownerName}
             onChange={handleChange}
@@ -327,7 +328,6 @@ export default function RegisterVehicle() {
           >
             <ImageUploader
               id="photoUrl"
-              title="Cargar Foto"
               image={image} // aquí pasas tu estado con la foto
               onFileChange={handleFileChange} // aquí manejas el cambio en tu form
             />
@@ -335,7 +335,7 @@ export default function RegisterVehicle() {
 
           <div className="hidden md:flex justify-start  items-center mt-4 text-white dark:text-black">
             <NavigationIcon
-              icon={<Icon name="icon-back" className={"w-6 h-6"} />}
+              icon={<Icon name="icon-back" className="w-6 h-6" />}
               text="Volver"
               type="button"
               title="Volver"
@@ -347,7 +347,7 @@ export default function RegisterVehicle() {
           <div className="flex items-center justify-between md:justify-end gap-6 mt-4">
             <FormButton
               icon={
-                <Icon name="icon-reset-form" className={"w-5 h-5 text-white"} />
+                <Icon name="icon-reset-form" className="w-5 h-5 text-white" />
               }
               text="Limpiar"
               title="Limpiar Formulario"
@@ -360,7 +360,7 @@ export default function RegisterVehicle() {
 
             <FormButton
               icon={
-                <Icon name="icon-save-form" className={"w-5 h-5 text-white"} />
+                <Icon name="icon-save-form" className="w-5 h-5 text-white" />
               }
               text="Guardar"
               title="Guardar Formulario"
@@ -368,6 +368,7 @@ export default function RegisterVehicle() {
               type="submit"
               color="teal"
               isLoading={isLoading}
+              disabled={Object.keys(errors).length > 0}
             />
           </div>
         </FormContainer>
